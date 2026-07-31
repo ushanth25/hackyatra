@@ -92,54 +92,72 @@ export function AdminOverview({ onNavigate, reports = [], onSubmitAdminReview })
               <tr style={{ background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
                 <th style={{ padding: 12 }}>ID</th>
                 <th style={{ padding: 12 }}>Location / Ward</th>
-                <th style={{ padding: 12 }}>Detection Source</th>
+                <th style={{ padding: 12 }}>Detection Source & Type</th>
                 <th style={{ padding: 12 }}>Peak g-Force</th>
                 <th style={{ padding: 12 }}>Verification Photo</th>
                 <th style={{ padding: 12 }}>Admin HQ Decision</th>
               </tr>
             </thead>
             <tbody>
-              {filteredReports.map((report) => (
-                <tr key={report.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                  <td style={{ padding: 12, fontWeight: 700, color: '#1F3A5F' }}>{report.id}</td>
-                  <td style={{ padding: 12 }}>{report.location} ({report.ward})</td>
-                  <td style={{ padding: 12 }}>{report.source}</td>
-                  <td style={{ padding: 12, color: report.severity === 'high' ? '#C0392B' : '#E8842C', fontWeight: 700 }}>
-                    {report.gForce}
-                  </td>
-                  <td style={{ padding: 12 }}>
-                    {report.verificationPhoto ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ color: '#2E8B57', fontWeight: 700 }}>Photo Attached ✅</span>
-                        <button 
-                          onClick={() => handleOpenReview(report)}
-                          style={{ background: '#1F3A5F', color: '#FFF', border: 'none', padding: '4px 10px', borderRadius: 4, cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700 }}
-                        >
-                          👁️ View & Review
-                        </button>
-                      </div>
-                    ) : (
-                      <span style={{ color: '#94A3B8' }}>Pending Inspection</span>
-                    )}
-                  </td>
-                  <td style={{ padding: 12 }}>
-                    {report.adminReview ? (
+              {filteredReports.map((report) => {
+                const isAuto = report.source.includes('ACCELEROMETER') || report.source.includes('Auto-Detect');
+                return (
+                  <tr key={report.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                    <td style={{ padding: 12, fontWeight: 700, color: '#1F3A5F' }}>{report.id}</td>
+                    <td style={{ padding: 12 }}>{report.location} ({report.ward})</td>
+                    <td style={{ padding: 12 }}>
                       <span style={{
-                        padding: '4px 8px',
-                        borderRadius: 4,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        background: isAuto ? '#FFF7ED' : '#EFF6FF',
+                        color: isAuto ? '#C2410C' : '#1D4ED8',
+                        border: `1px solid ${isAuto ? '#FFEDD5' : '#DBEAFE'}`,
+                        padding: '4px 10px',
+                        borderRadius: 6,
                         fontWeight: 700,
-                        fontSize: '0.75rem',
-                        background: report.adminReview.status === 'APPROVED' ? '#DCFCE7' : '#FEE2E2',
-                        color: report.adminReview.status === 'APPROVED' ? '#166534' : '#991B1B'
+                        fontSize: '0.78rem'
                       }}>
-                        {report.adminReview.text}
+                        {isAuto ? '📡 ACCELEROMETER TELEMETRY (Z-SHOCK)' : '📸 Citizen Manual Photo Upload'}
                       </span>
-                    ) : (
-                      <span style={{ color: '#64748B', fontSize: '0.75rem' }}>Awaiting Review</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td style={{ padding: 12, color: report.severity === 'high' ? '#C0392B' : '#E8842C', fontWeight: 700 }}>
+                      {report.gForce}
+                    </td>
+                    <td style={{ padding: 12 }}>
+                      {report.verificationPhoto ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ color: '#2E8B57', fontWeight: 700 }}>Photo Attached ✅</span>
+                          <button 
+                            onClick={() => handleOpenReview(report)}
+                            style={{ background: '#1F3A5F', color: '#FFF', border: 'none', padding: '4px 10px', borderRadius: 4, cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700 }}
+                          >
+                            👁️ View & Review
+                          </button>
+                        </div>
+                      ) : (
+                        <span style={{ color: '#94A3B8' }}>Pending Inspection</span>
+                      )}
+                    </td>
+                    <td style={{ padding: 12 }}>
+                      {report.adminReview ? (
+                        <span style={{
+                          padding: '4px 8px',
+                          borderRadius: 4,
+                          fontWeight: 700,
+                          fontSize: '0.75rem',
+                          background: report.adminReview.status === 'APPROVED' ? '#DCFCE7' : '#FEE2E2',
+                          color: report.adminReview.status === 'APPROVED' ? '#166534' : '#991B1B'
+                        }}>
+                          {report.adminReview.text}
+                        </span>
+                      ) : (
+                        <span style={{ color: '#64748B', fontSize: '0.75rem' }}>Awaiting Review</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -156,6 +174,7 @@ export function AdminOverview({ onNavigate, reports = [], onSubmitAdminReview })
               <div style={{ fontSize: '0.85rem', color: '#475569', marginBottom: 16 }}>
                 <div><strong>Location:</strong> {reviewingReport.location} ({reviewingReport.ward})</div>
                 <div><strong>Coordinates:</strong> {reviewingReport.coords}</div>
+                <div><strong>Detection Type:</strong> {reviewingReport.source.includes('ACCELEROMETER') || reviewingReport.source.includes('Auto-Detect') ? '📡 ACCELEROMETER TELEMETRY (Z-SHOCK)' : '📸 Citizen Manual Photo Upload'}</div>
               </div>
 
               <div style={{ marginBottom: 16 }}>

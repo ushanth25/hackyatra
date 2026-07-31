@@ -36,7 +36,7 @@ export default function App() {
       location: 'Beach Road, Nr Kali Temple',
       ward: 'Ward 52',
       coords: '17.7231° N, 83.3012° E',
-      source: 'Auto-Detect (Z-Shock)',
+      source: 'ACCELEROMETER TELEMETRY (Z-SHOCK)',
       gForce: '2.9g (High)',
       hitCount: 5,
       status: 'DETECTED',
@@ -52,14 +52,14 @@ export default function App() {
       location: 'Siripuram Circle',
       ward: 'Ward 52',
       coords: '17.7120° N, 83.2950° E',
-      source: 'Citizen App',
+      source: 'Citizen Manual Photo Upload',
       gForce: '3.1g (Critical)',
       hitCount: 3,
       status: 'VERIFIED',
       statusMark: 'Mark Verified ✅',
       severity: 'high',
       notes: 'Damaged asphalt near bus stop',
-      photo: null,
+      photo: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=400&q=80',
       verificationPhoto: null,
       adminReview: null
     },
@@ -68,7 +68,7 @@ export default function App() {
       location: 'MVP Colony Sector 4',
       ward: 'Ward 52',
       coords: '17.7340° N, 83.3120° E',
-      source: 'Auto-Detect (Z-Shock)',
+      source: 'ACCELEROMETER TELEMETRY (Z-SHOCK)',
       gForce: '2.5g (Moderate)',
       hitCount: 2,
       status: 'ASSIGNED',
@@ -96,14 +96,14 @@ export default function App() {
       );
 
       if (existingIndex !== -1) {
-        // Same Location: Keep SAME ID, increment Hit Count & update g-Force
+        // Same Location: Keep SAME ID, increment Hit Count & update g-Force cleanly
         const updated = [...prev];
         const existing = updated[existingIndex];
         updated[existingIndex] = {
           ...existing,
           hitCount: (existing.hitCount || 1) + 1,
           gForce: newReport.gForce,
-          source: `${existing.source} (+${existing.hitCount || 1} hits)`
+          source: existing.source // Keep clean static source description
         };
         return updated;
       } else {

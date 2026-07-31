@@ -104,14 +104,14 @@ export function AutoDetectActive({ onNavigate, onAddReport }) {
     const text = `💥 SHOCK PEAK ${gForceVal}g (Pothole Logged)`;
     setLastSpikeText(text);
 
-    // Auto-dispatch to Officer Queue (same location: Beach Road, Ward 52)
+    // Auto-dispatch to Officer Queue with explicit ACCELEROMETER TELEMETRY source
     if (onAddReport) {
       onAddReport({
         id: '#PTH-1042', // Same ID for Beach Road Ward 52 location
         location: 'Beach Road, Nr Kali Temple',
         ward: 'Ward 52',
         coords: '17.7231° N, 83.3012° E',
-        source: 'Auto-Detect (Z-Shock)',
+        source: 'ACCELEROMETER TELEMETRY (Z-SHOCK)',
         gForce: `${gForceVal}g (High Peak Shock)`,
         status: 'DETECTED',
         statusMark: 'Detected ⚠️',

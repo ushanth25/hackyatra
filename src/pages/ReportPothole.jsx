@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export function ReportPothole({ onNavigate, onAddReport }) {
   const [severity, setSeverity] = useState('high');
@@ -7,26 +7,6 @@ export function ReportPothole({ onNavigate, onAddReport }) {
   const [locationText, setLocationText] = useState('Detecting GPS location...');
   const [coords, setCoords] = useState('17.7231° N, 83.3012° E');
   const [ward, setWard] = useState('Ward 52');
-
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude.toFixed(4);
-          const lng = position.coords.longitude.toFixed(4);
-          setCoords(`${lat}° N, ${lng}° E`);
-          setLocationText(`GPS Location Locked: Beach Road Ward 52 (${lat}, ${lng})`);
-        },
-        (error) => {
-          console.log('GPS error fallback:', error);
-          setLocationText('17.7231° N, 83.3012° E • Beach Road Ward 52');
-        },
-        { enableHighAccuracy: true, timeout: 5000 }
-      );
-    } else {
-      setLocationText('17.7231° N, 83.3012° E • Beach Road Ward 52');
-    }
-  }, []);
 
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
@@ -46,13 +26,13 @@ export function ReportPothole({ onNavigate, onAddReport }) {
       location: 'Beach Road, Nr Kali Temple',
       ward: ward,
       coords: coords,
-      source: 'Citizen App',
+      source: 'Citizen Manual Photo Upload',
       gForce: severity === 'high' ? '2.9g (High)' : severity === 'medium' ? '1.8g (Moderate)' : '1.2g (Low)',
       status: 'DETECTED',
       statusMark: 'Detected ⚠️',
       severity: severity,
-      notes: notes || 'Citizen submitted pothole issue.',
-      photo: photoPreview,
+      notes: notes || 'Citizen submitted manual photo report.',
+      photo: photoPreview || 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=400&q=80',
       verificationPhoto: null
     };
 
@@ -94,7 +74,7 @@ export function ReportPothole({ onNavigate, onAddReport }) {
         {/* Location Box */}
         <div style={{ background: '#F4F6F8', padding: 12, borderRadius: 8, fontSize: '0.85rem' }}>
           <strong style={{ color: '#1F3A5F', display: 'block' }}>GPS Coordinates Locked</strong>
-          <span style={{ color: '#64748B' }}>{locationText}</span>
+          <span style={{ color: '#64748B' }}>17.7231° N, 83.3012° E • Beach Road Ward 52</span>
         </div>
 
         {/* Severity Selector */}
