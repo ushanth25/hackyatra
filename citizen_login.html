@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -137,6 +138,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="logo-placeholder">Emblem</div>
@@ -166,7 +168,8 @@
         </form>
 
         <!-- Create Account Link -->
-        <p class="create-account" style="margin-top: var(--spacing-gutter); color: var(--on-surface); font-weight: 500;">
+        <p class="create-account"
+            style="margin-top: var(--spacing-gutter); color: var(--on-surface); font-weight: 500;">
             New citizen?
             <a href="#" class="create-link" style="color: var(--accent);">Register</a>
         </p>
@@ -174,7 +177,7 @@
 
     <script>
         // Simple client-side validation for demo
-        document.querySelector('.login-form').addEventListener('submit', function(e) {
+        document.querySelector('.login-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -191,4 +194,5 @@
         });
     </script>
 </body>
+
 </html>
