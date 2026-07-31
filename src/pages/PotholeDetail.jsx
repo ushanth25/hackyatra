@@ -46,7 +46,7 @@ export function PotholeDetail({ onNavigate, incidentId, reports = [], onUpdateSt
       <div style={{ maxWidth: 1000, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <h2 style={{ color: '#1F3A5F', margin: 0 }}>Incident {currentIncident.id} — Detailed Inspection</h2>
-          <button onClick={() => onNavigate('reports_list')} style={{ background: '#1F3A5F', color: '#FFF', border: 'none', padding: '8px 16px', borderRadius: 4, cursor: 'pointer' }}>Back to Table</button>
+          <button onClick={() => onNavigate('officer')} style={{ background: '#1F3A5F', color: '#FFF', border: 'none', padding: '8px 16px', borderRadius: 4, cursor: 'pointer' }}>Back to Dashboard</button>
         </div>
 
         {/* Workflow Action Panel */}
