@@ -5,6 +5,8 @@ import { ReportPothole } from './pages/ReportPothole.jsx';
 import { MyReports } from './pages/MyReports.jsx';
 import { ReportDetail } from './pages/ReportDetail.jsx';
 import { CitizenProfile } from './pages/CitizenProfile.jsx';
+import { CitizenLogin } from './pages/CitizenLogin.jsx';
+import { CitizenRegister } from './pages/CitizenRegister.jsx';
 import { OfflineSyncQueue } from './pages/OfflineSyncQueue.jsx';
 import { OfficerDashboard } from './pages/OfficerDashboard.jsx';
 import { OfficerResetPassword } from './pages/OfficerResetPassword.jsx';
@@ -18,6 +20,7 @@ import { AdminLogin } from './pages/AdminLogin.jsx';
 export default function App() {
   const [currentView, setCurrentView] = useState('home');
   const [selectedIncidentId, setSelectedIncidentId] = useState('#PTH-1042');
+  const [currentUser, setCurrentUser] = useState({ email: 'citizen@gvmc.gov.in', name: 'Citizen User', role: 'citizen' });
 
   const [notifications, setNotifications] = useState([
     {
@@ -88,6 +91,10 @@ export default function App() {
     setCurrentView(viewName);
   };
 
+  const handleLoginSuccess = (userObj) => {
+    setCurrentUser(userObj);
+  };
+
   // Add or Deduplicate Report by Location
   const addReport = (newReport) => {
     setReports((prev) => {
@@ -103,7 +110,7 @@ export default function App() {
           ...existing,
           hitCount: (existing.hitCount || 1) + 1,
           gForce: newReport.gForce,
-          source: existing.source // Keep clean static source description
+          source: existing.source
         };
         return updated;
       } else {
@@ -163,7 +170,7 @@ export default function App() {
         <div style={{ display: 'flex', gap: 10 }}>
           <button 
             onClick={() => navigate('home')}
-            style={{ background: currentView.startsWith('home') || currentView === 'auto_detect' || currentView === 'my_reports' ? '#E8842C' : '#334155', color: '#FFF', border: 'none', padding: '4px 10px', borderRadius: 4, cursor: 'pointer' }}
+            style={{ background: currentView.startsWith('home') || currentView === 'auto_detect' || currentView === 'my_reports' || currentView.startsWith('citizen') ? '#E8842C' : '#334155', color: '#FFF', border: 'none', padding: '4px 10px', borderRadius: 4, cursor: 'pointer' }}
           >
             📱 Citizen App
           </button>
@@ -174,7 +181,7 @@ export default function App() {
             📊 Field Officer
           </button>
           <button 
-            onClick={() => navigate('admin_overview')}
+            onClick={() => navigate('admin_login')}
             style={{ background: currentView.startsWith('admin') ? '#E8842C' : '#334155', color: '#FFF', border: 'none', padding: '4px 10px', borderRadius: 4, cursor: 'pointer' }}
           >
             🏛️ Admin HQ
@@ -183,12 +190,14 @@ export default function App() {
       </div>
 
       {/* Render Active React Page Component */}
-      {currentView === 'home' && <CitizenHome onNavigate={navigate} />}
+      {currentView === 'home' && <CitizenHome onNavigate={navigate} user={currentUser} />}
+      {currentView === 'citizen_login' && <CitizenLogin onNavigate={navigate} onLoginSuccess={handleLoginSuccess} />}
+      {currentView === 'citizen_register' && <CitizenRegister onNavigate={navigate} onLoginSuccess={handleLoginSuccess} />}
       {currentView === 'auto_detect' && <AutoDetectActive onNavigate={navigate} onAddReport={addReport} />}
       {currentView === 'report' && <ReportPothole onNavigate={navigate} onAddReport={addReport} />}
       {currentView === 'my_reports' && <MyReports onNavigate={navigate} reports={reports} />}
       {currentView === 'report_detail' && <ReportDetail onNavigate={navigate} />}
-      {currentView === 'profile' && <CitizenProfile onNavigate={navigate} />}
+      {currentView === 'profile' && <CitizenProfile onNavigate={navigate} user={currentUser} />}
       {currentView === 'offline_queue' && <OfflineSyncQueue onNavigate={navigate} />}
       
       {currentView === 'officer' && <OfficerDashboard onNavigate={navigate} reports={reports} notifications={notifications} />}
