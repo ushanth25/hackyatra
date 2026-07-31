@@ -3,9 +3,18 @@ import React from 'react';
 export function CitizenProfile({ onNavigate }) {
   return (
     <div style={{ fontFamily: 'Noto Sans, sans-serif', maxWidth: 440, margin: '0 auto', background: '#FFF', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header style={{ background: '#1F3A5F', color: '#FFF', padding: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Citizen Profile</span>
-        <button onClick={() => onNavigate('home')} style={{ background: 'none', border: '1px solid #FFF', color: '#FFF', padding: '4px 10px', borderRadius: 4, cursor: 'pointer' }}>Logout</button>
+      <header style={{ background: '#1F3A5F', color: '#FFF', padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <button 
+            onClick={() => onNavigate('home')} 
+            style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.4rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}
+            title="Go to Home"
+          >
+            ←
+          </button>
+          <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Citizen Profile</span>
+        </div>
+        <button onClick={() => onNavigate('home')} style={{ background: 'none', border: '1px solid #FFF', color: '#FFF', padding: '4px 10px', borderRadius: 4, cursor: 'pointer', fontSize: '0.8rem' }}>Logout</button>
       </header>
 
       <div style={{ padding: 20, flex: 1 }}>
@@ -32,12 +41,6 @@ export function CitizenProfile({ onNavigate }) {
           <span style={{ fontWeight: 700, color: '#92400E' }}>View →</span>
         </div>
       </div>
-
-      <nav style={{ background: '#1F3A5F', display: 'flex', justify: 'space-around', padding: '12px 0' }}>
-        <button onClick={() => onNavigate('home')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>🏠 Home</button>
-        <button onClick={() => onNavigate('auto_detect')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>📡 Telemetry</button>
-        <button onClick={() => onNavigate('my_reports')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>📋 Reports</button>
-      </nav>
     </div>
   );
 }

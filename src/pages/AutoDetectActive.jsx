@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 export function AutoDetectActive({ onNavigate }) {
   const [distance, setDistance] = useState(0.0);
   const [shocks, setShocks] = useState(0);
-  const [speed, setSpeed] = useState(0);
-  const [isSimulating, setIsSimulating] = useState(false);
+  const [speed, setSpeed] = useState(35);
+  const [isSimulating, setIsSimulating] = useState(true);
 
   useEffect(() => {
     let timer;
@@ -63,9 +63,9 @@ export function AutoDetectActive({ onNavigate }) {
         {/* Speed Gate Alert Box */}
         <div style={{ width: '100%', background: speed >= 15 ? '#DCFCE7' : '#FEF3C7', borderLeft: `4px solid ${speed >= 15 ? '#2E8B57' : '#F59E0B'}`, padding: '10px 14px', borderRadius: 6, fontSize: '0.8rem', color: speed >= 15 ? '#14532D' : '#92400E' }}>
           {speed >= 15 ? (
-            <span>🚗 <strong>Drive Mode Active ({speed} km/h):</strong> Vehicle motion detected ($ speed \ge 15\text{ km/h}$). Telemetry shock engine active.</span>
+            <span>🚗 <strong>Drive Mode Active ({speed} km/h):</strong> Vehicle motion detected (&ge; 15 km/h). Telemetry shock engine active.</span>
           ) : (
-            <span>⚠️ <strong>Stationary (0 km/h):</strong> Auto-detection paused. Shock filtering requires vehicle speed $\ge 15\text{ km/h}$ to prevent chair/walking false positives.</span>
+            <span>⚠️ <strong>Stationary (0 km/h):</strong> Auto-detection paused. Shock filtering requires vehicle speed &ge; 15 km/h to prevent chair/walking false positives.</span>
           )}
         </div>
 

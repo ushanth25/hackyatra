@@ -44,12 +44,6 @@ export function MyReports({ onNavigate }) {
           ))}
         </div>
       </div>
-
-      <nav style={{ background: '#1F3A5F', display: 'flex', justifyContent: 'space-around', padding: '12px 0' }}>
-        <button onClick={() => onNavigate('home')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>🏠 Home</button>
-        <button onClick={() => onNavigate('auto_detect')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>📡 Telemetry</button>
-        <button onClick={() => onNavigate('my_reports')} style={{ background: 'none', border: 'none', color: '#E8842C', fontWeight: 700, cursor: 'pointer' }}>📋 Reports</button>
-      </nav>
     </div>
   );
 }

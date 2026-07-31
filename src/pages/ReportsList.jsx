@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function ReportsList({ onNavigate }) {
+export function ReportsList({ onNavigate, reports = [] }) {
   return (
     <div style={{ fontFamily: 'Noto Sans, sans-serif', background: '#F4F6F8', minHeight: '100vh', padding: 24 }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
@@ -17,19 +17,28 @@ export function ReportsList({ onNavigate }) {
                 <th style={{ padding: 12 }}>Location</th>
                 <th style={{ padding: 12 }}>Detection Source</th>
                 <th style={{ padding: 12 }}>Peak g-Force</th>
-                <th style={{ padding: 12 }}>Status</th>
                 <th style={{ padding: 12 }}>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <td style={{ padding: 12 }}>#PTH-1042</td>
-                <td style={{ padding: 12 }}>Beach Road, Nr Kali Temple</td>
-                <td style={{ padding: 12 }}>Auto-Detect (Z-Shock)</td>
-                <td style={{ padding: 12, color: '#C0392B', fontWeight: 700 }}>2.9g (High)</td>
-                <td style={{ padding: 12 }}><span style={{ background: '#FEE2E2', color: '#C0392B', padding: '4px 8px', borderRadius: 4, fontWeight: 700, fontSize: '0.75rem' }}>DETECTED</span></td>
-                <td style={{ padding: 12 }}><button onClick={() => onNavigate('pothole_detail')} style={{ background: '#1F3A5F', color: '#FFF', border: 'none', padding: '6px 12px', borderRadius: 4, cursor: 'pointer' }}>Inspect</button></td>
-              </tr>
+              {reports.map((report) => (
+                <tr key={report.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                  <td style={{ padding: 12, fontWeight: 700, color: '#1F3A5F' }}>{report.id}</td>
+                  <td style={{ padding: 12 }}>{report.location}</td>
+                  <td style={{ padding: 12 }}>{report.source}</td>
+                  <td style={{ padding: 12, color: report.severity === 'high' ? '#C0392B' : '#E8842C', fontWeight: 700 }}>
+                    {report.gForce}
+                  </td>
+                  <td style={{ padding: 12 }}>
+                    <button 
+                      onClick={() => onNavigate('pothole_detail', report.id)} 
+                      style={{ background: '#1F3A5F', color: '#FFF', border: 'none', padding: '6px 12px', borderRadius: 4, cursor: 'pointer' }}
+                    >
+                      Inspect
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
