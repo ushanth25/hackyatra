@@ -1,0 +1,239 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GVMC Road Watch - Auto-Detection Active</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#465f86",
+                    "tertiary-fixed-dim": "#c5c7c8",
+                    "on-tertiary-fixed-variant": "#454748",
+                    "surface-bright": "#f6f9ff",
+                    "outline-variant": "#c4c6cf",
+                    "on-tertiary-fixed": "#191c1d",
+                    "on-secondary-fixed-variant": "#703800",
+                    "inverse-on-surface": "#edf1f7",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#43474e",
+                    "on-primary-fixed-variant": "#2d476d",
+                    "tertiary-fixed": "#e1e3e4",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#d5e3ff",
+                    "on-primary-container": "#8ba4cf",
+                    "inverse-surface": "#2c3136",
+                    "secondary": "#934b00",
+                    "outline": "#74777f",
+                    "tertiary-container": "#373a3b",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#aec8f4",
+                    "on-surface": "#171c20",
+                    "tertiary": "#222425",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#171c20",
+                    "on-secondary-fixed": "#301400",
+                    "primary": "#1F3A5F",
+                    "secondary-fixed-dim": "#ffb782",
+                    "on-secondary-container": "#683300",
+                    "surface-container-low": "#f0f4fa",
+                    "surface-container-highest": "#dfe3e9",
+                    "secondary-fixed": "#ffdcc5",
+                    "inverse-primary": "#aec8f4",
+                    "on-error": "#ffffff",
+                    "on-tertiary-container": "#a2a4a5",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#eaeef4",
+                    "surface-container-high": "#e5e8ee",
+                    "secondary-container": "#E8842C",
+                    "surface-variant": "#dfe3e9",
+                    "on-primary-fixed": "#001c3b",
+                    "background": "#f6f9ff",
+                    "surface-dim": "#d6dae0",
+                    "surface": "#f6f9ff",
+                    "primary-container": "#1F3A5F"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "gutter": "16px",
+                    "base": "4px",
+                    "margin-desktop": "32px",
+                    "input-padding": "12px 16px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Noto Sans"],
+                    "headline-md": ["Noto Sans"],
+                    "headline-lg": ["Noto Sans"],
+                    "headline-sm": ["Noto Sans"],
+                    "headline-lg-mobile": ["Noto Sans"],
+                    "body-md": ["Noto Sans"],
+                    "label-md": ["Noto Sans"],
+                    "body-lg": ["Noto Sans"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Noto Sans', sans-serif; background-color: #f6f9ff; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .pulsing-ring {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .4; transform: scale(1.05); }
+        }
+        .scan-line {
+            height: 2px;
+            background: #E8842C;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            animation: scan 3s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- Top App Bar -->
+<header class="bg-primary text-on-primary w-full top-0 left-0 flex items-center justify-between px-margin-mobile h-16 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-primary">sensors</span>
+<h1 class="font-headline-sm text-headline-sm font-bold">Auto-Detection Active</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm opacity-80 uppercase tracking-wider">Demo</span>
+<button aria-checked="false" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-primary-fixed-dim" id="demoToggle" role="switch">
+<span aria-hidden="true" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0" id="toggleCircle"></span>
+</button>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center p-margin-mobile space-y-10">
+<!-- Live Status Visualizer -->
+<div class="relative flex items-center justify-center w-full max-w-xs aspect-square">
+<!-- Pulsing Rings -->
+<div class="absolute inset-0 rounded-full border-4 border-secondary-container/20 pulsing-ring scale-110"></div>
+<div class="absolute inset-0 rounded-full border border-secondary-container/40 pulsing-ring scale-125" style="animation-delay: 0.5s;"></div>
+<!-- Main Indicator -->
+<div class="relative z-10 w-64 h-64 rounded-full bg-white border-2 border-outline flex flex-col items-center justify-center overflow-hidden">
+<div class="scan-line"></div>
+<span class="material-symbols-outlined text-secondary-container mb-2" style="font-size: 48px; font-variation-settings: 'FILL' 1;">radar</span>
+<span class="font-headline-md text-headline-md text-on-surface">Monitoring</span>
+<div class="flex items-center mt-2 gap-1.5">
+<div class="w-2 h-2 rounded-full bg-secondary-container animate-ping"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Live Analysis</span>
+</div>
+</div>
+</div>
+<!-- Live Statistics Panel -->
+<div class="w-full max-w-md bg-white border border-outline rounded-lg divide-y divide-outline">
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">distance</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Distance monitored</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface" id="distanceVal">9.23 km</span>
+</div>
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error">report_problem</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Potholes detected this trip</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface" id="potholeVal">3</span>
+</div>
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-green-700">satellite_alt</span>
+<span class="font-body-md text-body-md text-on-surface-variant">GPS Status</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-green-700 font-bold">Strong</span>
+<span class="material-symbols-outlined text-green-700 text-sm">signal_cellular_4_bar</span>
+</div>
+</div>
+</div>
+<!-- Note Section -->
+<div class="text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant max-w-[240px]">
+                Keep the app open and phone mounted. Auto-detection relies on continuous camera and accelerometer access.
+            </p>
+</div>
+</main>
+<!-- Bottom Action Area -->
+<footer class="p-margin-mobile mb-4">
+<button class="w-full h-14 border-2 border-error text-error font-headline-sm text-headline-sm rounded-lg hover:bg-error/5 active:bg-error/10 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">stop_circle</span>
+            Stop Detection
+        </button>
+</footer>
+<script>
+        // Toggle Logic
+        const demoToggle = document.getElementById('demoToggle');
+        const toggleCircle = document.getElementById('toggleCircle');
+        let isDemo = false;
+
+        demoToggle.addEventListener('click', () => {
+            isDemo = !isDemo;
+            if (isDemo) {
+                demoToggle.classList.remove('bg-primary-fixed-dim');
+                demoToggle.classList.add('bg-secondary-container');
+                toggleCircle.classList.add('translate-x-5');
+            } else {
+                demoToggle.classList.add('bg-primary-fixed-dim');
+                demoToggle.classList.remove('bg-secondary-container');
+                toggleCircle.classList.remove('translate-x-5');
+            }
+        });
+
+        // Simulate Live Data
+        let distance = 4.2;
+        let potholes = 3;
+        
+        setInterval(() => {
+            distance += 0.01;
+            document.getElementById('distanceVal').innerText = distance.toFixed(2) + ' km';
+            
+            // Randomly "detect" a pothole every now and then
+            if(Math.random() > 0.99) {
+                potholes++;
+                document.getElementById('potholeVal').innerText = potholes;
+                // Visual feedback
+                const panel = document.getElementById('potholeVal').parentElement;
+                panel.classList.add('bg-error-container/20');
+                setTimeout(() => panel.classList.remove('bg-error-container/20'), 500);
+            }
+        }, 1000);
+    </script>
+</body></html>

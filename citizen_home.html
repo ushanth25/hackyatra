@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --on-surface: #1A2530;
+            --on-primary: #FFFFFF;
+            --error: #C0392B;
+            --success: #2E8B57;
+            --border-radius: 0.25rem;
+            --spacing-gutter: 16px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--light-grey);
+            color: var(--on-surface);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-gutter);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .top-bar .logo-placeholder {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--on-primary);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+
+        .top-bar .app-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        /* Map Container */
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Control Button */
+        .control-btn {
+            position: absolute;
+            bottom: 80px;
+            right: var(--spacing-gutter);
+            background-color: var(--accent);
+            color: var(--on-primary);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 9999px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .control-btn:hover {
+            background-color: #d47325;
+        }
+
+        /* Bottom Control Card */
+        .control-card {
+            background-color: var(--background);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-gutter);
+            margin: 0 var(--spacing-gutter) var(--spacing-gutter);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .control-card .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-gutter);
+        }
+
+        .control-card .toggle-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--on-surface);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--light-grey);
+            transition: .4s;
+            border-radius: 9999px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--on-surface);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .report-btn {
+            background-color: var(--accent);
+            color: var(--on-primary);
+            border: none;
+            padding: 14px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        .report-btn:hover {
+            background-color: #d47325;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="logo-placeholder">Emblem</div>
+            <span class="app-title" id="txt-title">GVMC Road Watch</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <button onclick="toggleTelugu()" style="background: #E8842C; color: #FFF; border: none; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">
+                🌐 <span id="txt-lang">తెలుగు</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Map Container -->
+    <main class="map-container">
+        <div id="map"></div>
+
+        <!-- Report Button (Floating) -->
+        <button class="control-btn" onclick="alert('Navigate to Report screen')">
+            <span style="font-size: 1.2rem;">+</span> Report a Pothole
+        </button>
+    </main>
+
+    <!-- Bottom Nav Bar -->
+    <nav style="background: #1F3A5F; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+        <a href="citizen_home.html" style="color: #E8842C; text-decoration: none; text-align: center; font-size: 0.75rem; font-weight: 700;">
+            <div style="font-size: 1.2rem;">🏠</div>Home
+        </a>
+        <a href="auto_detect_active.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📡</div>Auto-Detect
+        </a>
+        <a href="report_pothole.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📸</div>Report
+        </a>
+        <a href="my_reports.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📋</div>My Reports
+        </a>
+        <a href="citizen_profile.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">👤</div>Profile
+        </a>
+    </nav>
+
+    <!-- Bottom Control Card -->
+    <footer class="control-card">
+        <div class="toggle-row">
+            <label class="toggle-label">Auto-Detect (Drive Mode)</label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="auto-detect-toggle" onchange="if(this.checked) window.location.href='auto_detect_active.html'">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <button class="report-btn" onclick="window.location.href='report_pothole.html'">
+            Report a Pothole
+        </button>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize Map
+        const map = L.map('map').setView([17.7231, 83.3012], 13); // Default to Visakhapatnam
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // User location marker
+        L.marker([17.7231, 83.3012], {
+            title: 'Your Location',
+            icon: L.divIcon({
+                html: '<div style="background-color: #1F3A5F; border-radius: 50%; width: 16px; height: 16px; border: 3px solid rgba(31, 58, 95, 0.3);"></div>',
+                className: 'user-location-marker'
+            })
+        }).addTo(map);
+
+        // Simulated pothole markers with status colors
+        const potholes = [
+            { lat: 17.7240, lng: 83.3020, status: 'detected', severity: 'high' },
+            { lat: 17.7210, lng: 83.2980, status: 'assigned', severity: 'medium' },
+            { lat: 17.7260, lng: 83.3050, status: 'repaired', severity: 'low' }
+        ];
+
+        potholes.forEach(pothole => {
+            let color = '#C0392B'; // red - detected
+            if (pothole.status === 'assigned') color = '#E8842C'; // amber
+            else if (pothole.status === 'repaired') color = '#2E8B57'; // green
+
+        let isTelugu = false;
+        function toggleTelugu() {
+            isTelugu = !isTelugu;
+            document.getElementById('txt-lang').innerText = isTelugu ? 'English' : 'తెలుగు';
+            document.getElementById('txt-title').innerText = isTelugu ? 'జి.వి.యమ్.సి రోడ్ వాచ్' : 'GVMC Road Watch';
+            document.getElementById('btn-report').innerText = isTelugu ? 'గొయ్యి నమోదు చేయండి' : 'Report a Pothole';
+            document.getElementById('lbl-autodetect').innerText = isTelugu ? 'స్వయంచాలక గుర్తింపు (డ్రైవ్ మోడ్)' : 'Auto-Detect (Drive Mode)';
+        }
+    </script>
+    <script type="module" src="/js/pwa-register.js"></script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GVMC Road Watch - Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#171c20",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#683300",
+                    "primary-fixed": "#d5e3ff",
+                    "tertiary-fixed": "#e1e3e4",
+                    "secondary-fixed": "#ffdcc5",
+                    "secondary-fixed-dim": "#ffb782",
+                    "on-secondary-fixed": "#301400",
+                    "tertiary": "#222425",
+                    "primary": "#032448",
+                    "on-secondary-fixed-variant": "#703800",
+                    "on-primary-fixed": "#001c3b",
+                    "surface-variant": "#dfe3e9",
+                    "on-surface-variant": "#43474e",
+                    "surface-tint": "#465f86",
+                    "primary-container": "#1f3a5f",
+                    "surface-container": "#eaeef4",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-background": "#171c20",
+                    "surface-bright": "#f6f9ff",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#a2a4a5",
+                    "on-tertiary-fixed-variant": "#454748",
+                    "outline": "#74777f",
+                    "tertiary-container": "#373a3b",
+                    "outline-variant": "#c4c6cf",
+                    "surface-container-high": "#e5e8ee",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#aec8f4",
+                    "inverse-on-surface": "#edf1f7",
+                    "tertiary-fixed-dim": "#c5c7c8",
+                    "secondary-container": "#fc943b",
+                    "surface-container-highest": "#dfe3e9",
+                    "surface-container-low": "#f0f4fa",
+                    "on-primary-fixed-variant": "#2d476d",
+                    "secondary": "#934b00",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#191c1d",
+                    "inverse-surface": "#2c3136",
+                    "surface-dim": "#d6dae0",
+                    "inverse-primary": "#aec8f4",
+                    "surface": "#f6f9ff",
+                    "on-primary-container": "#8ba4cf",
+                    "background": "#f6f9ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "32px",
+                    "input-padding": "12px 16px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Noto Sans"],
+                    "label-sm": ["Noto Sans"],
+                    "body-lg": ["Noto Sans"],
+                    "headline-sm": ["Noto Sans"],
+                    "body-md": ["Noto Sans"],
+                    "headline-lg": ["Noto Sans"],
+                    "label-md": ["Noto Sans"],
+                    "headline-lg-mobile": ["Noto Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f6f9ff;
+            color: #171c20;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface flex flex-col min-h-screen">
+<!-- Top Bar: Shared Component Logic Applied -->
+<header class="fixed top-0 w-full z-50 h-16 bg-primary-container flex items-center px-4">
+<div class="flex items-center gap-3 w-full">
+<span class="material-symbols-outlined text-on-primary text-2xl" data-icon="account_balance">account_balance</span>
+<span class="text-on-primary font-label-md text-label-md leading-tight max-w-[240px]">
+                Greater Visakhapatnam Municipal Corporation
+            </span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile pt-16">
+<div class="w-full max-w-sm flex flex-col items-center text-center">
+<!-- App Branding Section -->
+<div class="mb-8">
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile text-primary mb-2">
+                    GVMC Road Watch
+                </h1>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                    Report and track road potholes in your ward
+                </p>
+</div>
+<!-- Login Form -->
+<form class="w-full space-y-6" onsubmit="event.preventDefault();">
+<div class="text-left">
+<label class="block text-label-md font-label-md text-on-surface mb-2" for="email">
+                        Email Address
+                    </label>
+<input class="w-full border border-outline-variant bg-surface-container-lowest p-input-padding rounded focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-on-tertiary-container" id="email" placeholder="citizen@example.com" type="email">
+</div>
+<div class="text-left">
+<label class="block text-label-md font-label-md text-on-surface mb-2" for="password">
+                        Password
+                    </label>
+<input class="w-full border border-outline-variant bg-surface-container-lowest p-input-padding rounded focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-on-tertiary-container" id="password" placeholder="••••••••" type="password">
+</div>
+<!-- Primary Action: Saffron #E8842C mapped to secondary-container intent or custom hex as per guidance -->
+<button class="w-full bg-[#E8842C] text-on-primary font-label-md text-label-md py-4 rounded hover:brightness-95 active:scale-[0.98] transition-all uppercase tracking-wide" style="background-color: #E8842C;" type="submit">
+                    Sign In
+                </button>
+</form>
+<!-- Secondary Action -->
+<div class="mt-8 flex flex-col items-center gap-4">
+<a class="text-on-primary-fixed-variant text-label-md font-label-md hover:underline" href="#">
+                    Forgot Password?
+                </a>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                    New citizen? 
+                    <a class="text-secondary font-semibold hover:underline" href="#">
+                        Register
+                    </a>
+</p>
+</div>
+</div>
+</main>
+<!-- Visual Anchor: Map Preview (Subtle Flat Background Element) -->
+<div class="w-full px-margin-mobile mt-auto mb-12">
+<div class="w-full h-32 border border-outline-variant rounded overflow-hidden relative opacity-60">
+<div class="w-full h-full bg-cover bg-center" data-alt="A clean, flat vector-style map of a coastal Indian city like Visakhapatnam. The map uses a professional government-style color palette of light grays and blues, showing major roads and municipal boundaries without any labels or text. The lighting is even and flat, avoiding any shadows or 3D effects to maintain the official administrative aesthetic of the GVMC Road Watch application." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_')"></div>
+<div class="absolute inset-0 bg-surface/40 flex items-center justify-center">
+<div class="bg-surface border border-outline px-4 py-1 rounded-full text-label-sm font-label-sm text-on-surface-variant">
+                    Visakhapatnam Metropolitan Region
+                </div>
+</div>
+</div>
+</div>
+<!-- Official Footer (Style Guidance: Light Gray #F8F9FA) -->
+<footer class="bg-surface-container-low py-6 px-margin-mobile border-t border-outline-variant">
+<div class="flex flex-col items-center text-center gap-2">
+<div class="flex gap-4">
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+<p class="text-[10px] font-label-sm text-on-tertiary-fixed-variant uppercase tracking-widest mt-2">
+                © 2024 Greater Visakhapatnam Municipal Corporation
+            </p>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for input focusing
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('label').style.color = '#032448';
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('label').style.color = '';
+            });
+        });
+    </script>
+</body></html>

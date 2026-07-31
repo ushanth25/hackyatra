@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --on-surface: #1A2530;
+            --on-primary: #FFFFFF;
+            --on-background: #1A2530;
+            --error: #C0392B;
+            --success: #2E8B57;
+            --border-radius: 0.25rem;
+            --spacing-base: 4px;
+            --spacing-gutter: 16px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .splash-container {
+            text-align: center;
+            padding: var(--spacing-gutter);
+            max-width: 90%;
+        }
+
+        .emblem-placeholder {
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--primary);
+            border-radius: var(--border-radius);
+            margin: 0 auto var(--spacing-gutter);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .app-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 var(--spacing-base) 0;
+        }
+
+        .app-subtitle {
+            font-size: 1.125rem;
+            font-weight: 400;
+            color: var(--on-surface);
+            margin: 0 0 var(--spacing-gutter) 0;
+            line-height: 1.5;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--light-grey);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-gutter);
+        }
+
+        .status-text {
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--on-surface);
+            margin-top: var(--spacing-gutter);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-state {
+            color: var(--error);
+            margin-top: var(--spacing-gutter);
+        }
+
+        .permission-btn {
+            background-color: var(--accent);
+            color: var(--on-primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: var(--spacing-gutter);
+            transition: background-color 0.2s;
+        }
+
+        .permission-btn:hover {
+            background-color: #d47325; /* slightly darker saffron */
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-container">
+        <div class="emblem-placeholder">Emblem</div>
+        <h1 class="app-title">GVMC Road Watch</h1>
+        <p class="app-subtitle">Report and track road potholes in your ward</p>
+        <div class="spinner"></div>
+        <p class="status-text">Checking permissions and session...</p>
+    </div>
+
+    <script>
+        // This would be where we check Firebase Auth and permissions
+        // For now, we'll simulate with a timeout
+        setTimeout(() => {
+            // Simulate successful check
+            document.querySelector('.status-text').textContent = 'Ready! Redirecting...';
+            // In real app: redirect to appropriate screen based on auth state
+            // window.location.href = 'home.html';
+        }, 2000);
+
+        // For demo purposes, simulate permission error after 3 seconds
+        // setTimeout(() => {
+        //     document.querySelector('.statusText').style.display = 'none';
+        //     document.querySelector('.spinner').style.display = 'none';
+        //     const errorDiv = document.createElement('div');
+        //     errorDiv.className = 'error-state';
+        //     errorDiv.textContent = 'Location permission denied. Please enable location services to continue.';
+        //     document.querySelector('.splash-container').appendChild(errorDiv);
+        //
+        //     const btn = document.createElement('button');
+        //     btn.className = 'permission-btn';
+        //     btn.textContent = 'Open Settings';
+        //     btn.onclick = () => alert('Would open device settings');
+        //     document.querySelector('.splash-container').appendChild(btn);
+        // }, 3000);
+    </script>
+</body>
+</html>

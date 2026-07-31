@@ -1,0 +1,383 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GVMC Road Watch — City Overview</title>
+<!-- Material Symbols for the specified icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts: Noto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#373a3b",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d6dae0",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#454748",
+                    "on-secondary-container": "#683300",
+                    "secondary-fixed-dim": "#ffb782",
+                    "on-surface": "#171c20",
+                    "background": "#f6f9ff",
+                    "on-primary-fixed-variant": "#2d476d",
+                    "surface-container-low": "#f0f4fa",
+                    "primary-container": "#1f3a5f",
+                    "surface-container": "#eaeef4",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-fixed": "#191c1d",
+                    "primary-fixed": "#d5e3ff",
+                    "outline-variant": "#c4c6cf",
+                    "tertiary-fixed": "#e1e3e4",
+                    "on-surface-variant": "#43474e",
+                    "on-secondary-fixed": "#301400",
+                    "surface-variant": "#dfe3e9",
+                    "secondary-fixed": "#ffdcc5",
+                    "primary": "#032448",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#dfe3e9",
+                    "on-background": "#171c20",
+                    "inverse-primary": "#aec8f4",
+                    "surface-container-high": "#e5e8ee",
+                    "surface-bright": "#f6f9ff",
+                    "secondary-container": "#fc943b",
+                    "inverse-on-surface": "#edf1f7",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#2c3136",
+                    "on-primary-container": "#8ba4cf",
+                    "tertiary": "#222425",
+                    "outline": "#74777f",
+                    "on-secondary-fixed-variant": "#703800",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#934b00",
+                    "on-primary-fixed": "#001c3b",
+                    "tertiary-fixed-dim": "#c5c7c8",
+                    "primary-fixed-dim": "#aec8f4",
+                    "surface-tint": "#465f86",
+                    "on-tertiary-container": "#a2a4a5",
+                    "error": "#ba1a1a",
+                    "surface": "#f6f9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "base": "4px",
+                    "margin-desktop": "32px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Noto Sans"],
+                    "body-lg": ["Noto Sans"],
+                    "body-md": ["Noto Sans"],
+                    "headline-md": ["Noto Sans"],
+                    "label-md": ["Noto Sans"],
+                    "label-sm": ["Noto Sans"],
+                    "headline-sm": ["Noto Sans"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                    "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                    "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                    "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                    "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Noto Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .heatmap-gradient {
+            background: linear-gradient(to right, #3b82f6, #ef4444);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-20 md:pb-0">
+<!-- TopAppBar Component (Source: JSON) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-primary text-on-primary border-b border-outline">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-primary" data-icon="account_balance">account_balance</span>
+<h1 class="text-headline-sm font-headline-sm font-bold text-on-primary">GVMC Road Watch — City Overview</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-label-md font-label-md opacity-80 hidden md:block">Commissioner Dashboard</span>
+<span class="material-symbols-outlined text-on-primary cursor-pointer hover:bg-primary-container p-2 rounded-full transition-colors" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<main class="pt-24 px-margin-mobile md:px-margin-desktop max-w-[1600px] mx-auto space-y-8">
+<!-- KPI Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Total Potholes -->
+<div class="bg-surface border border-outline p-6 flex flex-col gap-1 transition-all">
+<span class="text-label-md font-label-md text-on-surface-variant">Total Potholes</span>
+<span class="text-headline-md font-headline-md text-primary">4,441</span>
+</div>
+<!-- Repaired -->
+<div class="bg-surface border-l-4 border-l-[#2D6A4F] border-t border-r border-b border-outline p-6 flex flex-col gap-1 transition-all">
+<span class="text-label-md font-label-md text-on-surface-variant">Repaired</span>
+<span class="text-headline-md font-headline-md text-[#2D6A4F]">2,100</span>
+</div>
+<!-- In Progress -->
+<div class="bg-surface border-l-4 border-l-secondary-container border-t border-r border-b border-outline p-6 flex flex-col gap-1 transition-all">
+<span class="text-label-md font-label-md text-on-surface-variant">In Progress</span>
+<span class="text-headline-md font-headline-md text-secondary">340</span>
+</div>
+<!-- Pending -->
+<div class="bg-surface border-l-4 border-l-error border-t border-r border-b border-outline p-6 flex flex-col gap-1 transition-all">
+<span class="text-label-md font-label-md text-on-surface-variant">Pending</span>
+<span class="text-headline-md font-headline-md text-error">2,001</span>
+</div>
+</div>
+<!-- Main Content Area: Map and Analytics -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Map Section (2/3 width) -->
+<div class="lg:col-span-2 bg-surface border border-outline overflow-hidden flex flex-col h-[600px]">
+<div class="p-4 border-b border-outline flex justify-between items-center">
+<h2 class="text-headline-sm font-headline-sm">Pothole Density Heatmap</h2>
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-label-sm">Low Density</span>
+<div class="w-24 h-2 heatmap-gradient rounded-full"></div>
+<span class="text-label-sm font-label-sm">High Density</span>
+</div>
+</div>
+<div class="relative flex-grow bg-surface-container">
+<!-- Map Placeholder -->
+<div class="w-full h-full grayscale-[0.5] contrast-[1.1]" data-location="Visakhapatnam" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB9ON_d3_4LyV1Bf-bVbWa7OgHWPRgjRESKd0Aq44QYgErc47vX8UWlaYW6gOjGyPizlVYbXOWvNHejrX9eC77RC_QNGuxZv0Ey1J1Mpez3sP33XL1L288BfOV0rWuHnZtvWbPHNX10KDiuhqaFLGtVM2DWkNY71da6EXsj0Gx1K_aH2zV1VPs5N87qmR65LYDvDqz6JhNURy7UTMb3Hks_Gy6A3Gn01yP5iQfloiYq_lVkjFjZA-zg')"></div>
+<!-- Heatmap Overlay Simulation -->
+<div class="absolute inset-0 pointer-events-none opacity-40 mix-blend-multiply">
+<div class="absolute top-1/4 left-1/3 w-32 h-32 bg-red-500 blur-3xl rounded-full"></div>
+<div class="absolute top-1/2 left-1/2 w-48 h-48 bg-red-600 blur-3xl rounded-full"></div>
+<div class="absolute bottom-1/4 right-1/4 w-40 h-40 bg-orange-500 blur-3xl rounded-full"></div>
+<div class="absolute top-20 right-1/3 w-24 h-24 bg-blue-500 blur-3xl rounded-full"></div>
+</div>
+<!-- Map Controls UI -->
+<div class="absolute bottom-4 right-4 flex flex-col gap-2">
+<button class="bg-surface border border-outline w-10 h-10 flex items-center justify-center hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined">add</span></button>
+<button class="bg-surface border border-outline w-10 h-10 flex items-center justify-center hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined">remove</span></button>
+</div>
+</div>
+</div>
+<!-- Side Analytics (1/3 width) -->
+<div class="space-y-gutter">
+<!-- Bar Chart -->
+<div class="bg-surface border border-outline p-6 h-[292px] flex flex-col">
+<h3 class="text-label-md font-label-md mb-6 uppercase tracking-wider text-on-surface-variant">Potholes by Ward (Top 5)</h3>
+<div class="space-y-4 flex-grow">
+<div class="space-y-1">
+<div class="flex justify-between text-label-sm font-label-sm"><span>Ward 12</span> <span>842</span></div>
+<div class="h-3 bg-surface-container-high w-full rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[90%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-label-sm font-label-sm"><span>Ward 45</span> <span>710</span></div>
+<div class="h-3 bg-surface-container-high w-full rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[75%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-label-sm font-label-sm"><span>Ward 08</span> <span>645</span></div>
+<div class="h-3 bg-surface-container-high w-full rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[68%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-label-sm font-label-sm"><span>Ward 22</span> <span>580</span></div>
+<div class="h-3 bg-surface-container-high w-full rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[60%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Donut Chart -->
+<div class="bg-surface border border-outline p-6 h-[292px] flex flex-col items-center justify-center text-center">
+<h3 class="text-label-md font-label-md mb-4 uppercase tracking-wider text-on-surface-variant w-full text-left">Repair Status</h3>
+<div class="relative w-40 h-40">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<!-- Background Circle -->
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="transparent" stroke="currentColor" stroke-width="4"></path>
+<!-- Repaired Segment (47%) -->
+<path class="text-[#2D6A4F]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="transparent" stroke="currentColor" stroke-dasharray="47, 100" stroke-width="4"></path>
+<!-- In Progress Segment (8%) -->
+<path class="text-secondary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="transparent" stroke="currentColor" stroke-dasharray="8, 100" stroke-dashoffset="-47" stroke-width="4"></path>
+<!-- Pending Segment (45%) -->
+<path class="text-error" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="transparent" stroke="currentColor" stroke-dasharray="45, 100" stroke-dashoffset="-55" stroke-width="4"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-headline-sm font-headline-sm">47%</span>
+<span class="text-label-sm font-label-sm opacity-60">Complete</span>
+</div>
+</div>
+<div class="mt-4 flex gap-4 text-label-sm font-label-sm">
+<div class="flex items-center gap-1"><span class="w-2 h-2 bg-[#2D6A4F] rounded-full"></span>Repaired</div>
+<div class="flex items-center gap-1"><span class="w-2 h-2 bg-secondary-container rounded-full"></span>Active</div>
+<div class="flex items-center gap-1"><span class="w-2 h-2 bg-error rounded-full"></span>Pending</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Data Table Section -->
+<section class="bg-surface border border-outline overflow-hidden">
+<div class="p-4 border-b border-outline bg-surface-container-low">
+<h2 class="text-headline-sm font-headline-sm">Top 5 Wards by Backlog</h2>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-outline">
+<th class="p-4 text-label-md font-label-md text-on-surface-variant">Ward Number</th>
+<th class="p-4 text-label-md font-label-md text-on-surface-variant">Total Pending</th>
+<th class="p-4 text-label-md font-label-md text-on-surface-variant">Average Repair Time</th>
+<th class="p-4 text-label-md font-label-md text-on-surface-variant">Last Repair Entry</th>
+<th class="p-4 text-label-md font-label-md text-on-surface-variant text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 font-bold text-primary">Ward 12 - Gajuwaka</td>
+<td class="p-4">
+<span class="bg-error-container text-on-error-container px-2 py-1 rounded-sm text-label-sm">842 Pending</span>
+</td>
+<td class="p-4">14.2 Days</td>
+<td class="p-4 text-on-surface-variant text-label-sm">2 Hours ago</td>
+<td class="p-4 text-right">
+<button class="text-primary hover:underline text-label-md font-label-md">View Details</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 font-bold text-primary">Ward 45 - MVP Colony</td>
+<td class="p-4">
+<span class="bg-error-container text-on-error-container px-2 py-1 rounded-sm text-label-sm">710 Pending</span>
+</td>
+<td class="p-4">12.8 Days</td>
+<td class="p-4 text-on-surface-variant text-label-sm">5 Hours ago</td>
+<td class="p-4 text-right">
+<button class="text-primary hover:underline text-label-md font-label-md">View Details</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 font-bold text-primary">Ward 08 - Madhurawada</td>
+<td class="p-4">
+<span class="bg-error-container text-on-error-container px-2 py-1 rounded-sm text-label-sm">645 Pending</span>
+</td>
+<td class="p-4">18.5 Days</td>
+<td class="p-4 text-on-surface-variant text-label-sm">1 Day ago</td>
+<td class="p-4 text-right">
+<button class="text-primary hover:underline text-label-md font-label-md">View Details</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 font-bold text-primary">Ward 22 - Dwaraka Nagar</td>
+<td class="p-4">
+<span class="bg-error-container text-on-error-container px-2 py-1 rounded-sm text-label-sm">580 Pending</span>
+</td>
+<td class="p-4">10.1 Days</td>
+<td class="p-4 text-on-surface-variant text-label-sm">4 Hours ago</td>
+<td class="p-4 text-right">
+<button class="text-primary hover:underline text-label-md font-label-md">View Details</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 font-bold text-primary">Ward 31 - Seethammadhara</td>
+<td class="p-4">
+<span class="bg-error-container text-on-error-container px-2 py-1 rounded-sm text-label-sm">490 Pending</span>
+</td>
+<td class="p-4">11.4 Days</td>
+<td class="p-4 text-on-surface-variant text-label-sm">12 Hours ago</td>
+<td class="p-4 text-right">
+<button class="text-primary hover:underline text-label-md font-label-md">View Details</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-outline flex justify-between items-center bg-surface-container-low">
+<span class="text-label-sm font-label-sm opacity-60">Showing 5 of 98 Wards</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-outline hover:bg-surface-container-high text-label-sm">Previous</button>
+<button class="px-3 py-1 border border-outline hover:bg-surface-container-high text-label-sm">Next</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Component (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 h-16 bg-surface border-t border-outline flex justify-around items-center pb-safe">
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 transition-transform active:scale-90">
+<span class="material-symbols-outlined" data-icon="add_a_photo">add_a_photo</span>
+<span class="text-label-sm font-label-sm">Report</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-transform active:scale-90">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-label-sm font-label-sm">History</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-transform active:scale-90">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="text-label-sm font-label-sm">Alerts</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-transform active:scale-90">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</button>
+</nav>
+<footer class="mt-12 bg-surface-container-low p-8 border-t border-outline">
+<div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
+<div class="space-y-2">
+<h4 class="text-headline-sm font-headline-sm text-primary">Greater Visakhapatnam Municipal Corporation</h4>
+<p class="text-body-md text-on-surface-variant max-w-md">GVMC Road Watch is an official public service portal for monitoring and managing urban infrastructure maintenance in real-time.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+<div class="space-y-2">
+<span class="text-label-md font-label-md uppercase opacity-60">Resources</span>
+<ul class="text-body-md text-primary space-y-1">
+<li><a class="hover:underline" href="#">City Bylaws</a></li>
+<li><a class="hover:underline" href="#">Open Data</a></li>
+<li><a class="hover:underline" href="#">Press Releases</a></li>
+</ul>
+</div>
+<div class="space-y-2">
+<span class="text-label-md font-label-md uppercase opacity-60">Emergency</span>
+<ul class="text-body-md text-primary space-y-1">
+<li><a class="hover:underline" href="#">Contact Control Room</a></li>
+<li><a class="hover:underline" href="#">Disaster Response</a></li>
+</ul>
+</div>
+<div class="space-y-2">
+<span class="text-label-md font-label-md uppercase opacity-60">Connect</span>
+<div class="flex gap-4">
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary" data-icon="share">share</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary" data-icon="mail">mail</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary" data-icon="call">call</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-4 border-t border-outline-variant text-center text-label-sm font-label-sm text-on-surface-variant">
+            © 2023 GVMC. All rights reserved. Managed by Department of Public Works.
+        </div>
+</footer>
+<script>
+        // Micro-interactions for KPI cards
+        document.querySelectorAll('.bg-surface.border').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('border-primary');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('border-primary');
+            });
+        });
+    </script>
+</body></html>

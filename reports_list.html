@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - Reports List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #F4F6F8;
+            --on-surface: #1A2530;
+            --error: #C0392B;
+            --warning: #E8842C;
+            --success: #2E8B57;
+            --border-radius: 6px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Nav */
+        .sidebar {
+            width: 240px;
+            background: var(--primary);
+            color: #FFF;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-brand {
+            padding: 0 20px 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .emblem-placeholder {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #FFF;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
+            font-weight: 700;
+        }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            flex: 1;
+        }
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #CBD5E1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .nav-item.active a, .nav-item a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #FFF;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .top-nav {
+            height: 60px;
+            background: #FFF;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .ward-badge {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .content-body {
+            padding: 24px;
+            flex: 1;
+        }
+
+        .filter-card {
+            background: #FFF;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .filter-select, .search-input {
+            padding: 8px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+
+        /* Table */
+        .table-card {
+            background: #FFF;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+        th {
+            background: #F8FAFC;
+            padding: 14px 16px;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 1px solid #E2E8F0;
+        }
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        tr:hover {
+            background: #F8FAFC;
+        }
+
+        .badge-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column !important; }
+            .sidebar { width: 100% !important; padding: 10px !important; }
+            .sidebar-brand { border-bottom: none !important; padding-bottom: 0 !important; }
+            .nav-list { display: flex !important; flex-wrap: wrap !important; margin: 10px 0 0 0 !important; }
+            .nav-item a { padding: 8px 12px !important; font-size: 0.8rem !important; }
+            .top-nav { flex-direction: column !important; height: auto !important; padding: 12px !important; gap: 10px !important; align-items: flex-start !important; }
+            .kpi-grid, .layout-grid, .detail-grid { grid-template-columns: 1fr !important; }
+            .table-card { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+            .filter-card { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
+        }
+
+        .status-detected { background: #FEE2E2; color: var(--error); }
+        .status-assigned { background: #FEF3C7; color: #B45309; }
+        .status-repaired { background: #DCFCE7; color: var(--success); }
+
+        .btn-view {
+            background: var(--primary);
+            color: #FFF;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="emblem-placeholder">EMBLEM</div>
+            <div>
+                <div style="font-weight: 700; font-size: 0.95rem;">GVMC Road Watch</div>
+                <div style="font-size: 0.7rem; opacity: 0.7;">Field Officer Portal</div>
+            </div>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="officer_overview.html"><span class="material-symbols-outlined">dashboard</span> Overview</a></li>
+            <li class="nav-item"><a href="gis_map.html"><span class="material-symbols-outlined">map</span> Live GIS Map</a></li>
+            <li class="nav-item active"><a href="reports_list.html"><span class="material-symbols-outlined">table_view</span> Reports Table</a></li>
+            <li class="nav-item"><a href="admin_overview.html"><span class="material-symbols-outlined">admin_panel_settings</span> City Overview</a></li>
+            <li class="nav-item"><a href="admin_officers.html"><span class="material-symbols-outlined">manage_accounts</span> Officer Mgmt</a></li>
+            <li class="nav-item"><a href="admin_settings.html"><span class="material-symbols-outlined">settings</span> System Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+        <div class="top-nav">
+            <div class="ward-badge">
+                <span class="material-symbols-outlined">lock</span>
+                <span>Jurisdiction: Ward 52 (Siripuram)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <span style="font-size: 0.85rem; font-weight: 600;">Officer R. Sharma</span>
+                <a href="officer_login.html" style="color: var(--error); text-decoration: none; font-size: 0.85rem; font-weight: 600;">Logout</a>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <h2 style="margin: 0 0 16px 0; color: var(--primary);">Pothole Incidents Directory</h2>
+
+            <!-- Filters -->
+            <div class="filter-card">
+                <div class="filter-group">
+                    <input type="text" class="search-input" placeholder="Search Incident ID, Road..." style="width: 220px;">
+                    <select class="filter-select">
+                        <option>All Statuses</option>
+                        <option>Detected / Unrepaired</option>
+                        <option>Assigned / In Progress</option>
+                        <option>Repaired / Resolved</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Sources</option>
+                        <option>Auto Accelerometer</option>
+                        <option>Manual Citizen</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="btn-view" style="background: var(--accent);" onclick="alert('Exporting CSV log...')">Export CSV</button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Location / Road</th>
+                            <th>Detection Type</th>
+                            <th>Severity / Peak g</th>
+                            <th>Report Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#PTH-1042</td>
+                            <td>Beach Road, Nr Kali Temple</td>
+                            <td>Auto-Detect (Z-Shock)</td>
+                            <td><strong style="color: var(--error);">High (2.9g)</strong></td>
+                            <td>30 Jul 2026, 11:20 AM</td>
+                            <td><span class="badge-status status-detected">DETECTED</span></td>
+                            <td><a href="pothole_detail.html" class="btn-view">Inspect</a></td>
+                        </tr>
+                        <tr>
+                            <td>#PTH-1041</td>
+                            <td>Siripuram Circle Main Rd</td>
+                            <td>Manual Photo Report</td>
+                            <td><strong style="color: var(--warning);">Medium (1.8g)</strong></td>
+                            <td>30 Jul 2026, 09:15 AM</td>
+                            <td><span class="badge-status status-assigned">ASSIGNED</span></td>
+                            <td><a href="pothole_detail.html" class="btn-view">Inspect</a></td>
+                        </tr>
+                        <tr>
+                            <td>#PTH-1039</td>
+                            <td>VIP Road, Lane 4</td>
+                            <td>Auto-Detect (Z-Shock)</td>
+                            <td><strong style="color: var(--error);">Critical (3.2g)</strong></td>
+                            <td>29 Jul 2026, 16:40 PM</td>
+                            <td><span class="badge-status status-assigned">ASSIGNED</span></td>
+                            <td><a href="pothole_detail.html" class="btn-view">Inspect</a></td>
+                        </tr>
+                        <tr>
+                            <td>#PTH-1035</td>
+                            <td>Waltair Main Road</td>
+                            <td>Manual Photo Report</td>
+                            <td><strong style="color: var(--success);">Low (1.2g)</strong></td>
+                            <td>28 Jul 2026, 14:10 PM</td>
+                            <td><span class="badge-status status-repaired">REPAIRED</span></td>
+                            <td><a href="pothole_detail.html" class="btn-view">Inspect</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

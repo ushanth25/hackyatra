@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - My Reports</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --on-surface: #1A2530;
+            --on-primary: #FFFFFF;
+            --error: #C0392B;
+            --success: #2E8B57;
+            --border-radius: 0.25rem;
+            --spacing-base: 4px;
+            --spacing-gutter: 16px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-gutter);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header .back-btn {
+            background: none;
+            border: none;
+            color: var(--on-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .header .back-btn:hover {
+            opacity: 0.8;
+        }
+
+        .header .profile-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--on-primary);
+            margin-right: 16px;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            padding: var(--spacing-gutter);
+            overflow-y: auto;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 0 0 var(--spacing-gutter) 0;
+        }
+
+        /* Status Filter */
+        .status-filters {
+            display: flex;
+            flex-direction: row;
+            gap: var(--spacing-base);
+            margin-bottom: var(--spacing-gutter);
+            overflow-x: auto;
+            padding-bottom: var(--spacing-base);
+            border-bottom: 1px solid var(--light-grey);
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            background-color: var(--background);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--on-surface);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover {
+            background-color: var(--light-grey);
+        }
+
+        .filter-chip.active {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: var(--on-primary);
+        }
+
+        /* Report Cards */
+        .report-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-gutter);
+        }
+
+        @media (min-width: 768px) {
+            .report-list {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .report-card {
+            background-color: var(--background);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-section);
+            margin-bottom: var(--spacing-gutter);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .report-card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-base);
+        }
+
+        .report-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: var(--border-radius);
+            color: var(--on-primary);
+        }
+
+        .report-date {
+            font-size: 0.875rem;
+            color: var(--on-surface-variant);
+        }
+
+        .report-location {
+            font-weight: 600;
+            margin-left: 12px;
+            color: var(--primary);
+        }
+
+        .report-preview {
+            margin-top: var(--spacing-base);
+            max-height: 120px;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+        }
+
+        .report-preview img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+        }
+
+        .report-meta {
+            font-size: 0.875rem;
+            color: var(--on-surface-variant);
+            margin-top: var(--spacing-base);
+        }
+
+        .report-detail-link {
+            text-align: center;
+            margin-top: var(--spacing-gutter);
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .report-detail-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="back-btn" onclick="history.back()">← Back</button>
+        <span class="header-title">My Reports</span>
+        <span class="profile-name">Citizen Profile</span>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+        <h2 class="section-title">Your Reported Potholes</h2>
+
+        <!-- Status Filters -->
+        <div class="status-filters" id="status-filters">
+            <div class="filter-chip active" onclick="setFilter('Pending')">Pending</div>
+            <div class="filter-chip" onclick="setFilter('Assigned')">Assigned</div>
+            <div class="filter-chip" onclick="setFilter('Repaired')">Repaired</div>
+        </div>
+
+        <!-- Report List -->
+        <div class="report-list" id="report-list">
+            <!-- Report Card 1 -->
+            <div class="report-card">
+                <div class="report-card-header">
+                    <span>Status: <span class="report-status report-status-pending">Pending Verification</span></span>
+                    <span class="report-status report-status-pending">✓ Awaiting Review</span>
+                </div>
+                <div class="report-preview" style="background: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_')">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_" alt="Pothole Photo" loading="lazy">
+                </div>
+                <div class="report-meta">
+                    <div class="report-date">Reported: 2026-08-15</div>
+                    <div class="report-location">Ward 14 • 1.2 km near DRC Gate</div>
+                </div>
+                <a href="report_detail.html?reportId=1" class="report-detail-link">View Details</a>
+            </div>
+
+            <!-- Report Card 2 -->
+            <div class="report-card">
+                <div class="report-card-header">
+                    <span>Status: <span class="report-status report-status-assigned">Assigned</span></span>
+                    <span class="report-status report-status-assigned">⚠️ Awaiting Repair</span>
+                </div>
+                <div class="report-preview" style="background: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_')">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_" alt="Pothole Photo" loading="lazy">
+                </div>
+                <div class="report-meta">
+                    <div class="report-date">Reported: 2026-08-20</div>
+                    <div class="report-location">Ward 28 • 0.4 km near St. Mary's School</div>
+                </div>
+                <a href="report_detail.html?reportId=2" class="report-detail-link">View Details</a>
+            </div>
+
+            <!-- Report Card 3 -->
+            <div class="report-card">
+                <div class="report-card-header">
+                    <span>Status: <span class="report-status report-status-repaired">Repaired</span></span>
+                    <span class="report-status report-status-repaired">✅ Completed</span>
+                </div>
+                <div class="report-preview" style="background: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_')">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_" alt="Pothole Photo" loading="lazy">
+                </div>
+                <div class="report-meta">
+                    <div class="report-date">Reported: 2026-08-10 • Repaired: 2026-08-12</div>
+                    <div class="report-location">Ward 52 • 0.8 km near GVMC DRC</div>
+                </div>
+                <span class="badge report-badge" style="background-color: var(--success); color: white; font-weight: bold; padding: 4px 8px; border-radius: 12px; display: inline-block; font-size: 0.75rem; margin-top: 8px;">
+                    ✅ Fixed
+                </span>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" style="text-align: center; padding: var(--spacing-gutter); color: var(--on-surface-variant); display: none;">
+            <p style="font-size: 1.125rem; margin-bottom: var(--spacing-base);">
+                You haven't reported any potholes yet.
+            </p>
+            <p style="font-weight: 500; margin-bottom: var(--spacing-base);">
+                <a href="#" class="report-detail-link" style="color: var(--primary);">Report now</a>
+            </p>
+            <p style="min-height: 100px;"></p>
+        </div>
+    </main>
+
+    <script>
+        // Status Filter Logic
+        let currentFilter = 'Pending';
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            // Update active chip
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // In real app: filter report cards based on status
+            console.log(`Filtering reports by status: ${filter}`);
+        }
+
+        // Mock Report Data
+        const mockReports = [
+            {
+                id: 1,
+                status: 'Pending',
+                source: 'Manual',
+                dateReported: '2026-08-15',
+                location: 'Ward 14 • 1.2 km near DRC Gate',
+                imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_'
+            },
+            {
+                id: 2,
+                status: 'Assigned',
+                source: 'Auto-Detect',
+                dateReported: '2026-08-20',
+                location: 'Ward 28 • 0.4 km near St. Mary's School',
+                imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_'
+            },
+            {
+                id: 3,
+                status: 'Repaired',
+                source: 'Manual',
+                dateReported: '2026-08-10',
+                repairedDate: '2026-08-12',
+                location: 'Ward 52 • 0.8 km near GVMC DRC',
+                imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAcpwXbKtEhcgOUl6H8xIndUDwqQmNfge8E_IwoctW0B009iLl1U4AKQOuYlD48t500GqprALQtBVLbmaP-rE7DLgQrfgOHMuKDsK3HUYGssXRMlvtRZkDUzQvMGNeuKV1KA5nsmAkZ2AQ63Hn3HqutpyaycVT8SnbviaT-LgrUseQSSsMtWer23HJcMWGi2Ip36yXay4wyPuqD1Punn2v96po2x9rOdYCxnSEGPI5WQPHXFOFmQA6_'
+            }
+        ];
+
+        // Update Report List
+        function updateReportList() {
+            const filter = currentFilter;
+            const reportList = document.getElementById('report-list');
+
+            // In real app: filter mockReports based on filter
+            const filteredReports = mockReports.filter(report => {
+                if (filter === 'Pending' && report.status === 'Pending') return true;
+                if (filter === 'Assigned' && report.status === 'Assigned') return true;
+                if (filter === 'Repaired' && report.status === 'Repaired') return true;
+                return true;
+            });
+
+            // Update UI
+            reportList.innerHTML = '';
+
+            if (filteredReports.length === 0) {
+                document.getElementById('empty-state').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('empty-state').style.display = 'none';
+
+            filteredReports.forEach(report => {
+                const reportCard = document.createElement('div');
+                reportCard.className = 'report-card';
+
+                reportCard.innerHTML = `
+                    <div class="report-card-header">
+                        <span>Status: <span class="report-status report-status-${report.status.toLowerCase()}">${report.status === 'Pending' ? '✓ Awaiting Review' :
+                                report.status === 'Assigned' ? '⚠️ Awaiting Repair' : '✅ Completed'}</span></span>
+                    </div>
+                    <div class="report-preview" style="background: url('${report.imageUrl}')">
+                        <img src="${report.imageUrl}" alt="Pothole Photo" loading="lazy">
+                    </div>
+                    <div class="report-meta">
+                        <div class="report-date">Reported: ${report.dateReported}${report.repairedDate ? ` • Repaired: ${report.repairedDate}` : ''}</div>
+                        <div class="report-location">
+                            ${report.location}
+                            <span style="font-weight: bold; color: var(--accent);"> ${report.id}</span>
+                        </div>
+                    </div>
+                    <a href="report_detail.html?reportId=${report.id}" class="report-detail-link">View Details</a>
+                `;
+
+                reportList.appendChild(reportCard);
+            });
+        }
+
+    <!-- Bottom Nav Bar -->
+    <nav style="background: #1F3A5F; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.1); position: sticky; bottom: 0;">
+        <a href="citizen_home.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">🏠</div>Home
+        </a>
+        <a href="auto_detect_active.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📡</div>Auto-Detect
+        </a>
+        <a href="report_pothole.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📸</div>Report
+        </a>
+        <a href="my_reports.html" style="color: #E8842C; text-decoration: none; text-align: center; font-size: 0.75rem; font-weight: 700;">
+            <div style="font-size: 1.2rem;">📋</div>My Reports
+        </a>
+        <a href="citizen_profile.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">👤</div>Profile
+        </a>
+    </nav>
+</body>
+</html>

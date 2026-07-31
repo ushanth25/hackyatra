@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - Report Pothole</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --on-surface: #1A2530;
+            --on-primary: #FFFFFF;
+            --error: #C0392B;
+            --success: #2E8B57;
+            --border-radius: 0.25rem;
+            --spacing-base: 4px;
+            --spacing-gutter: 16px;
+            --spacing-section: 24px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--light-grey);
+            color: var(--on-surface);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-gutter);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .top-nav .back-btn {
+            background: none;
+            border: none;
+            color: var(--on-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            margin-right: 8px;
+        }
+
+        .top-nav .title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .top-nav .save-btn {
+            background-color: var(--accent);
+            color: var(--on-primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background-color: #d47325;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: var(--spacing-gutter);
+            overflow-y: auto;
+        }
+
+        /* Form Sections */
+        .form-section {
+            background-color: var(--background);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-section);
+            margin-bottom: var(--spacing-section);
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 0 0 var(--spacing-section) 0;
+        }
+
+        /* Media Upload */
+        .media-upload {
+            border: 2px dashed var(--light-grey);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-section);
+            text-align: center;
+            background-color: var(--light-grey);
+        }
+
+        .media-upload.dragover {
+            border-color: var(--accent);
+            background-color: rgba(236, 133, 44, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: var(--spacing-base);
+        }
+
+        .upload-text {
+            font-size: 1rem;
+            color: var(--on-surface);
+            margin-bottom: var(--spacing-base);
+        }
+
+        .upload-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .upload-link:hover {
+            text-decoration: underline;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            border-radius: var(--border-radius);
+            margin-top: var(--spacing-base);
+        }
+
+        /* Form Fields */
+        .form-field {
+            margin-bottom: var(--spacing-section);
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--on-surface);
+            margin-bottom: var(--spacing-base);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            background-color: var(--background);
+            font-size: 1rem;
+            color: var(--on-surface);
+            box-sizing: border-box;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(31, 58, 95, 0.2);
+        }
+
+        .input-error {
+            border-color: var(--error);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.8125rem;
+            margin-top: var(--spacing-base);
+        }
+
+        /* Severity Selector */
+        .severity-selector {
+            display: flex;
+            gap: var(--spacing-base);
+            margin-top: var(--spacing-base);
+        }
+
+        .severity-chip {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background-color: var(--background);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .severity-chip.selected {
+            border-color: var(--accent);
+            background-color: rgba(236, 133, 44, 0.1);
+            color: var(--accent);
+        }
+
+        .severity-chip:hover {
+            border-color: var(--accent);
+        }
+
+        /* GPS Field */
+        .gps-field {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-base);
+            background-color: var(--light-grey);
+            border-radius: var(--border-radius);
+            margin-top: var(--spacing-base);
+        }
+
+        .gps-coords {
+            font-weight: 600;
+            font-family: monospace;
+        }
+
+        /* Status indicator */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: var(--spacing-base);
+        }
+
+        .status-pending {
+            background-color: rgba(192, 57, 43, 0.1);
+            color: var(--error);
+        }
+
+        /* Buttons */
+        .primary-btn {
+            background-color: var(--accent);
+            color: var(--on-primary);
+            border: none;
+            padding: 14px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: var(--spacing-section);
+        }
+
+        .primary-btn:hover {
+            background-color: #d47325;
+        }
+
+        .secondary-btn {
+            background-color: var(--background);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 12px;
+            border-radius: var(--border-radius);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: var(--spacing-base);
+        }
+
+        .secondary-btn:hover {
+            background-color: var(--light-grey);
+        }
+
+        /* Character count */
+        .char-count {
+            font-size: 0.75rem;
+            color: var(--on-surface-variant);
+            text-align: right;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <header class="top-nav">
+        <button class="back-btn" onclick="window.history.back()">←</button>
+        <span class="title">Report a Pothole</span>
+        <button class="save-btn">Save</button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Pothole Report Form -->
+        <form id="pothole-form">
+            <!-- Media Upload Section -->
+            <section class="form-section">
+                <h2 class="section-title">Media</h2>
+                <div class="media-upload" id="media-upload-zone">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Tap to capture or select a photo of the pothole</div>
+                    <a href="#" class="upload-link">Upload from Gallery</a>
+                    <input type="file" id="image-input" accept="image/*" style="display: none;">
+                    <div id="image-preview" class="image-preview-container"></div>
+                </div>
+            </section>
+
+            <!-- Severity Section -->
+            <section class="form-section">
+                <h2 class="section-title">Severity</h2>
+                <div class="severity-selector">
+                    <div class="severity-chip" onclick="selectSeverity('Low')">Low</div>
+                    <div class="severity-chip" onclick="selectSeverity('Medium')">Medium</div>
+                    <div class="severity-chip selected" onclick="selectSeverity('High')">High</div>
+                </div>
+                <div class="status-indicator status-pending">
+                    <span>○</span>
+                    <span>Status: Pending Verification</span>
+                </div>
+            </section>
+
+            <!-- Location Section -->
+            <section class="form-section">
+                <h2 class="section-title">Location</h2>
+                <div class="gps-field">
+                    <span>📍 GPS Coordinates</span>
+                    <span class="gps-coords">17.6868, 83.2185</span>
+                </div>
+                <small style="color: var(--on-surface-variant);">Auto-detected from device</small>
+            </section>
+
+            <!-- Description Section -->
+            <section class="form-section">
+                <h2 class="section-title">Description (Optional)</h2>
+                <textarea id="description" class="input-field" rows="4" maxlength="200" placeholder="Any additional details about the pothole..."></textarea>
+                <div class="char-count"><span id="char-count">0</span>/200</div>
+            </section>
+
+            <!-- Ward Section -->
+            <section class="form-section">
+                <h2 class="section-title">Ward</h2>
+                <select class="input-field">
+                    <option selected>Ward 52 - GVMC Roads & Buildings</option>
+                    <option>Ward 14 - East Zone</option>
+                    <option>Ward 28 - West Zone</option>
+                </select>
+            </section>
+        </form>
+
+        <!-- Submit Button -->
+        <button class="primary-btn" onclick="submitReport()">Submit Report</button>
+
+        <!-- Cancel Button -->
+        <button class="secondary-btn" onclick="window.history.back()">Cancel</button>
+    </main>
+
+    <script>
+        // Severity Selection
+        let selectedSeverity = 'High';
+
+        function selectSeverity(severity) {
+            selectedSeverity = severity;
+            // Update UI
+            document.querySelectorAll('.severity-chip').forEach(chip => {
+                chip.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        // Image Upload
+        const mediaUploadZone = document.getElementById('media-upload-zone');
+        const imageInput = document.getElementById('image-input');
+
+        mediaUploadZone.addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        mediaUploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            mediaUploadZone.classList.add('dragover');
+        });
+
+        mediaUploadZone.addEventListener('dragleave', () => {
+            mediaUploadZone.classList.remove('dragover');
+        });
+
+        mediaUploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            mediaUploadZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                handleImageFile(files[0]);
+            }
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleImageFile(e.target.files[0]);
+            }
+        });
+
+        function handleImageFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const previewContainer = document.getElementById('image-preview');
+                previewContainer.innerHTML = `<img src="${e.target.result}" alt="Pothole preview" class="preview-image">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Character Count
+        document.getElementById('description').addEventListener('input', function() {
+            const charCount = this.value.length;
+            document.getElementById('char-count').textContent = charCount;
+        });
+
+        // Form Validation & Submission
+        function submitReport() {
+            const imagePreview = document.getElementById('image-preview').innerHTML;
+            const description = document.getElementById('description').value;
+            const ward = document.querySelector('select').value;
+
+            if (!imagePreview) {
+                alert('Please add a photo of the pothole');
+                return;
+            }
+
+            // In real app: submit to Firebase with all data
+            const reportData = {
+                image: imagePreview,
+                severity: selectedSeverity,
+                coordinates: '17.6868, 83.2185',
+                description: description,
+                ward: ward,
+                status: 'pending',
+                timestamp: new Date().toISOString()
+            };
+
+            console.log('Submitting report:', reportData);
+            alert('Pothole reported successfully!\n\nDetails:\n- Severity: ' + selectedSeverity + '\n- Location: ' + reportData.coordinates + '\n- Ward: ' + ward + '\n\nThank you for helping keep Visakhapatnam roads safe!');
+
+            // In real app: navigate to My Reports or Home
+            window.location.href = 'my_reports.html';
+        }
+    </script>
+
+    <!-- Bottom Nav Bar -->
+    <nav style="background: #1F3A5F; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.1); position: sticky; bottom: 0;">
+        <a href="citizen_home.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">🏠</div>Home
+        </a>
+        <a href="auto_detect_active.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📡</div>Auto-Detect
+        </a>
+        <a href="report_pothole.html" style="color: #E8842C; text-decoration: none; text-align: center; font-size: 0.75rem; font-weight: 700;">
+            <div style="font-size: 1.2rem;">📸</div>Report
+        </a>
+        <a href="my_reports.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📋</div>My Reports
+        </a>
+        <a href="citizen_profile.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">👤</div>Profile
+        </a>
+    </nav>
+</body>
+</html>

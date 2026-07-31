@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - Admin Officer Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #F4F6F8;
+            --on-surface: #1A2530;
+            --error: #C0392B;
+            --success: #2E8B57;
+            --border-radius: 6px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Nav */
+        .sidebar {
+            width: 240px;
+            background: var(--primary);
+            color: #FFF;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-brand {
+            padding: 0 20px 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .emblem-placeholder {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #FFF;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
+            font-weight: 700;
+        }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            flex: 1;
+        }
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #CBD5E1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .nav-item.active a, .nav-item a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #FFF;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .top-nav {
+            height: 60px;
+            background: #FFF;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .content-body {
+            padding: 24px;
+            flex: 1;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #FFF;
+            border: none;
+            padding: 10px 16px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card {
+            background: #FFF;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+        th {
+            background: #F8FAFC;
+            padding: 12px 16px;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 1px solid #E2E8F0;
+        }
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            border: 1px solid #CBD5E1;
+            background: #FFF;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .modal-box {
+            background: #FFF;
+            width: 440px;
+            max-width: 90%;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column !important; }
+            .sidebar { width: 100% !important; padding: 10px !important; }
+            .sidebar-brand { border-bottom: none !important; padding-bottom: 0 !important; }
+            .nav-list { display: flex !important; flex-wrap: wrap !important; margin: 10px 0 0 0 !important; }
+            .nav-item a { padding: 8px 12px !important; font-size: 0.8rem !important; }
+            .top-nav { flex-direction: column !important; height: auto !important; padding: 12px !important; gap: 10px !important; align-items: flex-start !important; }
+            .table-card { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+            .modal-box { width: 95% !important; }
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="emblem-placeholder">EMBLEM</div>
+            <div>
+                <div style="font-weight: 700; font-size: 0.95rem;">GVMC Road Watch</div>
+                <div style="font-size: 0.7rem; opacity: 0.7;">Commissioner Admin</div>
+            </div>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="officer_overview.html"><span class="material-symbols-outlined">dashboard</span> Officer View</a></li>
+            <li class="nav-item"><a href="gis_map.html"><span class="material-symbols-outlined">map</span> Live GIS Map</a></li>
+            <li class="nav-item"><a href="reports_list.html"><span class="material-symbols-outlined">table_view</span> Reports Table</a></li>
+            <li class="nav-item"><a href="admin_overview.html"><span class="material-symbols-outlined">admin_panel_settings</span> City Overview</a></li>
+            <li class="nav-item active"><a href="admin_officers.html"><span class="material-symbols-outlined">manage_accounts</span> Officer Mgmt</a></li>
+            <li class="nav-item"><a href="admin_settings.html"><span class="material-symbols-outlined">settings</span> System Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+        <div class="top-nav">
+            <div style="font-weight: 700; color: var(--primary);">Officer Provisioning & Account Administration</div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <span style="font-size: 0.85rem; font-weight: 600;">Admin User: System Admin</span>
+                <a href="officer_login.html" style="color: var(--error); text-decoration: none; font-size: 0.85rem; font-weight: 600;">Logout</a>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="action-bar">
+                <h2 style="margin: 0; color: var(--primary);">Provisioned Field Officers</h2>
+                <button class="btn-primary" onclick="openModal()">
+                    <span class="material-symbols-outlined">person_add</span>
+                    Provision New Officer
+                </button>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Officer Name</th>
+                            <th>Official Email</th>
+                            <th>Assigned Jurisdiction</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>R. Sharma</td>
+                            <td>officer.ward52@gvmc.gov.in</td>
+                            <td>Ward 52 (Siripuram)</td>
+                            <td>Field Officer</td>
+                            <td><span style="color: var(--success); font-weight: 700;">ACTIVE</span></td>
+                            <td>
+                                <button class="btn-sm" onclick="alert('Sent activation link to email.')">Send Activation Link</button>
+                                <button class="btn-sm" style="color: var(--error);" onclick="alert('Officer account deactivated.')">Deactivate</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>K. Rao</td>
+                            <td>officer.ward40@gvmc.gov.in</td>
+                            <td>Ward 40 (Gajuwaka)</td>
+                            <td>Field Officer</td>
+                            <td><span style="color: var(--success); font-weight: 700;">ACTIVE</span></td>
+                            <td>
+                                <button class="btn-sm" onclick="alert('Sent activation link to email.')">Send Activation Link</button>
+                                <button class="btn-sm" style="color: var(--error);" onclick="alert('Officer account deactivated.')">Deactivate</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>V. Reddy</td>
+                            <td>officer.ward12@gvmc.gov.in</td>
+                            <td>Ward 12 (Maddilapalem)</td>
+                            <td>Field Officer</td>
+                            <td><span style="color: var(--accent); font-weight: 700;">PENDING ACTIVATION</span></td>
+                            <td>
+                                <button class="btn-sm" onclick="alert('Resent activation token.')">Resend Activation Token</button>
+                                <button class="btn-sm" style="color: var(--error);" onclick="alert('Officer account deactivated.')">Deactivate</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Provisioning Modal -->
+    <div class="modal-overlay" id="provisionModal">
+        <div class="modal-box">
+            <h3 style="margin: 0 0 16px 0; color: var(--primary);">Provision New Officer Account</h3>
+            <div class="form-group">
+                <label>Officer Full Name</label>
+                <input type="text" class="form-control" placeholder="e.g. Suresh Kumar">
+            </div>
+            <div class="form-group">
+                <label>Govt Email Address</label>
+                <input type="email" class="form-control" placeholder="e.g. suresh.ward53@gvmc.gov.in">
+            </div>
+            <div class="form-group">
+                <label>Assigned Ward Jurisdiction</label>
+                <select class="form-control">
+                    <option>Ward 53 (Waltair)</option>
+                    <option>Ward 14 (Seethammadhara)</option>
+                    <option>Ward 08 (MVP Colony)</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-primary" style="flex:1;" onclick="provisionOfficer()">Provision & Generate Token</button>
+                <button class="btn-sm" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() { document.getElementById('provisionModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('provisionModal').style.display = 'none'; }
+        function provisionOfficer() {
+            alert('New officer provisioned! Activation link sent to officer email.');
+            closeModal();
+        }
+    </script>
+</body>
+</html>

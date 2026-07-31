@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - Admin City Overview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #F4F6F8;
+            --on-surface: #1A2530;
+            --error: #C0392B;
+            --warning: #E8842C;
+            --success: #2E8B57;
+            --border-radius: 6px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Nav */
+        .sidebar {
+            width: 240px;
+            background: var(--primary);
+            color: #FFF;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-brand {
+            padding: 0 20px 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .emblem-placeholder {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #FFF;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
+            font-weight: 700;
+        }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            flex: 1;
+        }
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #CBD5E1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .nav-item.active a, .nav-item a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #FFF;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .top-nav {
+            height: 60px;
+            background: #FFF;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Unlocked Ward Selector */
+        .ward-unlocked-select {
+            background: #EFF6FF;
+            border: 1.5px solid #3B82F6;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .content-body {
+            padding: 24px;
+            flex: 1;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .kpi-card {
+            background: #FFF;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--border-radius);
+            padding: 16px;
+        }
+        .kpi-title {
+            font-size: 0.85rem;
+            color: #64748B;
+            font-weight: 600;
+        }
+        .kpi-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 6px 0;
+        }
+        .kpi-sub {
+            font-size: 0.75rem;
+            color: #64748B;
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #FFF;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        #cityMap {
+            height: 320px;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            background: #F8FAFC;
+            padding: 10px 12px;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 1px solid #E2E8F0;
+            text-align: left;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column !important; }
+            .sidebar { width: 100% !important; padding: 10px !important; }
+            .sidebar-brand { border-bottom: none !important; padding-bottom: 0 !important; }
+            .nav-list { display: flex !important; flex-wrap: wrap !important; margin: 10px 0 0 0 !important; }
+            .nav-item a { padding: 8px 12px !important; font-size: 0.8rem !important; }
+            .top-nav { flex-direction: column !important; height: auto !important; padding: 12px !important; gap: 10px !important; align-items: flex-start !important; }
+            .kpi-grid, .layout-grid, .detail-grid { grid-template-columns: 1fr !important; }
+            .table-card { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="emblem-placeholder">EMBLEM</div>
+            <div>
+                <div style="font-weight: 700; font-size: 0.95rem;">GVMC Road Watch</div>
+                <div style="font-size: 0.7rem; opacity: 0.7;">Commissioner Admin</div>
+            </div>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="officer_overview.html"><span class="material-symbols-outlined">dashboard</span> Officer View</a></li>
+            <li class="nav-item"><a href="gis_map.html"><span class="material-symbols-outlined">map</span> Live GIS Map</a></li>
+            <li class="nav-item"><a href="reports_list.html"><span class="material-symbols-outlined">table_view</span> Reports Table</a></li>
+            <li class="nav-item active"><a href="admin_overview.html"><span class="material-symbols-outlined">admin_panel_settings</span> City Overview</a></li>
+            <li class="nav-item"><a href="admin_officers.html"><span class="material-symbols-outlined">manage_accounts</span> Officer Mgmt</a></li>
+            <li class="nav-item"><a href="admin_settings.html"><span class="material-symbols-outlined">settings</span> System Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+        <div class="top-nav">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span class="material-symbols-outlined" style="color: var(--accent);">lock_open</span>
+                <span style="font-weight: 600; font-size: 0.9rem;">Jurisdiction Filter:</span>
+                <select class="ward-unlocked-select" onchange="alert('Switching overview scope to: ' + this.value)">
+                    <option>All GVMC Wards (City-Wide)</option>
+                    <option>Zone 1 — Ward 52 (Siripuram)</option>
+                    <option>Zone 1 — Ward 53 (Waltair)</option>
+                    <option>Zone 2 — Ward 40 (Gajuwaka)</option>
+                    <option>Zone 3 — Ward 12 (Maddilapalem)</option>
+                </select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary);">Commissioner HQ</span>
+                <a href="officer_login.html" style="color: var(--error); text-decoration: none; font-size: 0.85rem; font-weight: 600;">Logout</a>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <h2 style="margin: 0 0 20px 0; color: var(--primary);">GVMC City-Wide Pothole & Road Quality Dashboard</h2>
+
+            <!-- Monsoon Outbreak Banner -->
+            <div style="background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 14px 18px; border-radius: 6px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <strong style="color: #1E40AF; font-size: 0.95rem;">🌧️ Monsoon Outbreak Surge Alert (Nov 2024 Audit Target):</strong>
+                    <span style="font-size: 0.85rem; color: #1E3A8A; display: block; margin-top: 2px;">
+                        Monsoon rainfall intensity: <strong>48 mm/hr</strong> • Pothole formation velocity: <strong>+34/day</strong> • Pre-emptive detection active across all 98 wards.
+                    </span>
+                </div>
+                <button onclick="alert('Monsoon Risk Overlay Enabled on GIS Heatmap!')" style="background: #3B82F6; color: #FFF; border: none; padding: 8px 14px; border-radius: 4px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                    View Rainfall Overlay
+                </button>
+            </div>
+
+            <!-- KPI Cards with Rs 6.9 Cr Budget Calculator -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title">Total Detected Potholes</div>
+                    <div class="kpi-val">1,428</div>
+                    <div class="kpi-sub" style="color: var(--error);">▲ 14% monsoon surge</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Est. Repair Budget Needed</div>
+                    <div class="kpi-val" style="color: var(--warning);">₹ 58.4 Lakh</div>
+                    <div class="kpi-sub">Out of ₹ 6.9 Cr Nov Sanction</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Resolved & Patched</div>
+                    <div class="kpi-val" style="color: var(--success);">1,044</div>
+                    <div class="kpi-sub">73.1% Resolution Rate</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Crew Deployment Rate</div>
+                    <div class="kpi-val">18 Teams</div>
+                    <div class="kpi-sub" style="color: var(--success);">Optimal Staff Allocation</div>
+                </div>
+            </div>
+
+            <!-- Main Layout Grid -->
+            <div class="layout-grid">
+                <!-- Left: City Heatmap -->
+                <div class="card">
+                    <h4 style="margin: 0 0 14px 0; color: var(--primary);">Visakhapatnam City-Wide Pothole Intensity Heatmap</h4>
+                    <div id="cityMap"></div>
+                </div>
+
+                <!-- Right: Top Backlog Wards -->
+                <div>
+                    <div class="card">
+                        <h4 style="margin: 0 0 14px 0; color: var(--primary);">Top Backlog Wards</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ward</th>
+                                    <th>Pending</th>
+                                    <th>Avg SLA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Ward 52 (Siripuram)</td>
+                                    <td><strong style="color: var(--error);">48</strong></td>
+                                    <td>3.8 Days</td>
+                                </tr>
+                                <tr>
+                                    <td>Ward 40 (Gajuwaka)</td>
+                                    <td><strong style="color: var(--error);">42</strong></td>
+                                    <td>5.1 Days</td>
+                                </tr>
+                                <tr>
+                                    <td>Ward 12 (Maddilapalem)</td>
+                                    <td><strong style="color: var(--warning);">35</strong></td>
+                                    <td>4.0 Days</td>
+                                </tr>
+                                <tr>
+                                    <td>Ward 53 (Waltair)</td>
+                                    <td><strong style="color: var(--warning);">28</strong></td>
+                                    <td>3.2 Days</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h4 style="margin: 0 0 14px 0; color: var(--primary);">Contractor SLAs</h4>
+                        <div style="font-size: 0.85rem; margin-bottom: 8px;">
+                            <strong>GVMC Internal Team:</strong> 88% SLA Met
+                        </div>
+                        <div style="font-size: 0.85rem;">
+                            <strong>Coastal Infra Ltd:</strong> 94% SLA Met
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const cityMap = L.map('cityMap').setView([17.72, 83.30], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(cityMap);
+
+        // Heatmap circles simulation
+        L.circle([17.723, 83.301], { radius: 800, color: 'red', fillColor: '#f03', fillOpacity: 0.4 }).addTo(cityMap).bindPopup('Ward 52 Hotspot');
+        L.circle([17.690, 83.210], { radius: 1000, color: 'red', fillColor: '#f03', fillOpacity: 0.4 }).addTo(cityMap).bindPopup('Gajuwaka Industrial Zone');
+        L.circle([17.740, 83.310], { radius: 600, color: 'orange', fillColor: '#E8842C', fillOpacity: 0.4 }).addTo(cityMap).bindPopup('Maddilapalem Zone');
+    </script>
+</body>
+</html>

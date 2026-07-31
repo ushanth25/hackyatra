@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --on-surface: #1A2530;
+            --on-primary: #FFFFFF;
+            --error: #C0392B;
+            --success: #2E8B57;
+            --border-radius: 0.25rem;
+            --spacing-base: 4px;
+            --spacing-gutter: 16px;
+            --spacing-section: 24px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-gutter);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header .header-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--on-primary);
+        }
+
+        .header .logout-btn {
+            background: none;
+            border: 1px solid var(--on-primary);
+            color: var(--on-primary);
+            padding: 6px 12px;
+            border-radius: var(--border-radius);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--spacing-gutter);
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background-color: var(--background);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-section);
+            margin-bottom: var(--spacing-section);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-section);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--on-primary);
+            margin-right: var(--spacing-section);
+        }
+
+        .profile-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .profile-email {
+            font-size: 0.9375rem;
+            color: var(--on-surface-variant);
+        }
+
+        /* Settings Section */
+        .settings-section {
+            background-color: var(--background);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-section);
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary);
+            padding: var(--spacing-section);
+            border-bottom: 1px solid var(--light-grey);
+            margin: 0;
+        }
+
+        /* Setting Item */
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-section);
+            border-bottom: 1px solid var(--light-grey);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--on-surface);
+        }
+
+        .setting-description {
+            font-size: 0.875rem;
+            color: var(--on-surface-variant);
+            margin-top: 4px;
+        }
+
+        /* Toggle Switch */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+            margin-left: 16px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--light-grey);
+            transition: .4s;
+            border-radius: 10px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 12px;
+            width: 12px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--on-surface);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(16px);
+            background-color: var(--on-primary);
+        }
+
+        /* Info Section */
+        .info-section {
+            background-color: var(--light-grey);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-base);
+            margin-bottom: var(--spacing-section);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-base) 0;
+            border-bottom: 1px solid var(--background);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: var(--on-surface-variant);
+        }
+
+        .info-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--on-surface);
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--accent);
+            color: var(--on-primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: var(--spacing-section);
+        }
+
+        .btn:hover {
+            background-color: #d47325;
+        }
+
+        .btn-outline {
+            background-color: var(--background);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            margin-top: var(--spacing-base);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--light-grey);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <span class="header-title">Citizen Profile</span>
+        <button class="logout-btn" onclick="window.location.href='citizen_login.html'">Logout</button>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+        <!-- Profile Card -->
+        <section class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div>
+                    <div class="profile-name">Visakhapatnam Citizen</div>
+                    <div class="profile-email">citizen@example.com</div>
+                </div>
+            </div>
+
+            <!-- User Info -->
+            <div class="info-section">
+                <div class="info-row">
+                    <span class="info-label">Account ID</span>
+                    <span class="info-value">UID_123456</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Account Type</span>
+                    <span class="info-value">Citizen</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Joined On</span>
+                    <span class="info-value">2026-08-01</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section class="settings-section">
+            <h2 class="section-title">Settings</h2>
+
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Push Notifications</div>
+                    <div class="setting-description">Receive real-time updates about your reports</div>
+                </div>
+                <div class="toggle-wrapper">
+                    <span>OFF</span>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <span>ON</span>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Auto-Detect Mode</div>
+                    <div class="setting-description">Automatically detect potholes while driving</div>
+                </div>
+                <div class="toggle-wrapper">
+                    <span>OFF</span>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    <span>ON</span>
+                </div>
+            </div>
+
+            <div class="setting-item" style="cursor: pointer;" onclick="window.location.href='citizen_offline_sync.html'">
+                <div>
+                    <div class="setting-label">Offline Sync Queue</div>
+                    <div class="setting-description">Manage 3 pending offline pothole reports</div>
+                </div>
+                <div style="font-weight: 700; color: var(--accent);">View Queue →</div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <button class="btn">Save Settings</button>
+        <button class="btn btn-outline" onclick="window.location.href='citizen_login.html'">Change Password</button>
+    </main>
+
+    <!-- Bottom Nav Bar -->
+    <nav style="background: #1F3A5F; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+        <a href="citizen_home.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">🏠</div>Home
+        </a>
+        <a href="auto_detect_active.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📡</div>Auto-Detect
+        </a>
+        <a href="report_pothole.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📸</div>Report
+        </a>
+        <a href="my_reports.html" style="color: #FFF; text-decoration: none; text-align: center; font-size: 0.75rem;">
+            <div style="font-size: 1.2rem;">📋</div>My Reports
+        </a>
+        <a href="citizen_profile.html" style="color: #E8842C; text-decoration: none; text-align: center; font-size: 0.75rem; font-weight: 700;">
+            <div style="font-size: 1.2rem;">👤</div>Profile
+        </a>
+    </nav>
+</body>
+</html>

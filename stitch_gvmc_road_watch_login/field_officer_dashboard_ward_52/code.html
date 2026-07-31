@@ -1,0 +1,355 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GVMC Road Watch | Officer Dashboard</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Noto Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d6dae0",
+                        "primary": "#032448",
+                        "background": "#f6f9ff",
+                        "secondary": "#934b00",
+                        "tertiary": "#222425",
+                        "inverse-on-surface": "#edf1f7",
+                        "on-tertiary-container": "#a2a4a5",
+                        "on-primary-fixed": "#001c3b",
+                        "on-secondary-fixed-variant": "#703800",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#373a3b",
+                        "outline-variant": "#c4c6cf",
+                        "primary-fixed-dim": "#aec8f4",
+                        "primary-fixed": "#d5e3ff",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e5e8ee",
+                        "on-surface": "#171c20",
+                        "tertiary-fixed": "#e1e3e4",
+                        "surface-bright": "#f6f9ff",
+                        "primary-container": "#1f3a5f",
+                        "on-surface-variant": "#43474e",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#aec8f4",
+                        "outline": "#74777f",
+                        "on-secondary-container": "#683300",
+                        "on-primary-container": "#8ba4cf",
+                        "surface-variant": "#dfe3e9",
+                        "inverse-surface": "#2c3136",
+                        "secondary-fixed-dim": "#ffb782",
+                        "secondary-container": "#fc943b",
+                        "tertiary-fixed-dim": "#c5c7c8",
+                        "surface-container": "#eaeef4",
+                        "on-background": "#171c20",
+                        "surface-container-low": "#f0f4fa",
+                        "on-secondary-fixed": "#301400",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#dfe3e9",
+                        "on-tertiary-fixed": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#465f86",
+                        "surface": "#f6f9ff",
+                        "on-tertiary-fixed-variant": "#454748",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#2d476d",
+                        "secondary-fixed": "#ffdcc5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "input-padding": "12px 16px",
+                        "base": "4px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Noto Sans"],
+                        "headline-lg-mobile": ["Noto Sans"],
+                        "headline-sm": ["Noto Sans"],
+                        "headline-md": ["Noto Sans"],
+                        "label-md": ["Noto Sans"],
+                        "headline-lg": ["Noto Sans"],
+                        "body-md": ["Noto Sans"],
+                        "body-lg": ["Noto Sans"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Noto Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .map-shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); }
+        .custom-marker { transition: transform 0.2s ease-in-out; cursor: pointer; }
+        .custom-marker:hover { transform: scale(1.2); }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar from JSON Logic -->
+<header class="fixed top-0 w-full z-50 bg-primary-container h-16 flex justify-between items-center px-margin-mobile md:px-margin-desktop border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<h1 class="text-headline-sm font-headline-sm font-bold text-on-primary">GVMC Road Watch</h1>
+</div>
+<div class="hidden md:flex flex-grow justify-center">
+<div class="relative group">
+<button class="flex items-center gap-2 bg-primary px-4 py-2 rounded border border-outline-variant text-on-primary font-label-md">
+<span>Ward 52 - Visakhapatnam</span>
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+<div class="absolute top-full left-0 mt-1 w-64 bg-surface-container-lowest border border-outline-variant hidden group-hover:block z-50">
+<div class="p-2 hover:bg-surface-variant cursor-pointer text-on-surface text-label-md">Ward 51 - Seethammadhara</div>
+<div class="p-2 bg-secondary-container text-on-secondary-container cursor-pointer font-bold text-label-md">Ward 52 - MVP Colony</div>
+<div class="p-2 hover:bg-surface-variant cursor-pointer text-on-surface text-label-md">Ward 53 - Akkayyapalem</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end text-on-primary">
+<span class="text-label-md font-bold">Officer Rajesh Kumar</span>
+<button class="text-label-sm opacity-80 hover:opacity-100 flex items-center gap-1 transition-opacity">
+                    Logout <span class="material-symbols-outlined text-[16px]">logout</span>
+</button>
+</div>
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex flex-col md:flex-row pt-16 h-screen overflow-hidden">
+<!-- Left 2/3: Detailed Map Area -->
+<section class="w-full md:w-2/3 relative border-r border-outline-variant bg-surface-variant">
+<!-- Simulated Map Component -->
+<div class="absolute inset-0 map-shadow-inner overflow-hidden" data-location="Visakhapatnam">
+<div class="w-full h-full relative" data-alt="A detailed topographic and satellite hybrid map of an urban Indian coastal city, specifically MVP Colony in Visakhapatnam. The map is viewed from a high-angle top-down perspective, showing clean city blocks, green coastal parks, and main arterial roads. Overlaid on the map are crisp, professional digital pins in red, amber, and green, marking various road maintenance points. The aesthetic is clinical, professional, and high-contrast, suitable for a government infrastructure monitoring tool." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA5ER5JM53d92SnL-M9hCdlweu9UTjnE_icbZgG7sCw-YeIrH3Y6tGDNCh8ps05rk1XZZsoi4sHHvjTf88DzpGVtZaufcPLCKAkJNsF40xH7-MnwFSfGkfn3HZ7pC0yWvNBUdzsOUaRHG7D8QmzOehTycCfvsg6Di3E8sA-1-gxAXt_IqQ3afAgFbgXJVgL-VWsZjLEZ1TaA6QM2mtVWOESKIwPD9GW1TAFL8fc8N_YbHAek8gh3aOy')">
+<!-- Simulated Map Markers -->
+<div class="absolute top-1/4 left-1/3 custom-marker group">
+<span class="material-symbols-outlined text-error text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-primary text-on-primary text-[10px] p-2 rounded whitespace-nowrap z-50">
+                            Pothole ID: #PV-9082<br>Severity: Severe
+                        </div>
+</div>
+<div class="absolute top-1/2 left-1/2 custom-marker group">
+<span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-primary text-on-primary text-[10px] p-2 rounded whitespace-nowrap z-50">
+                            Pothole ID: #PV-9083<br>Status: Assigned
+                        </div>
+</div>
+<div class="absolute bottom-1/3 left-1/4 custom-marker group">
+<span class="material-symbols-outlined text-green-700 text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-primary text-on-primary text-[10px] p-2 rounded whitespace-nowrap z-50">
+                            Pothole ID: #PV-9084<br>Status: Repaired
+                        </div>
+</div>
+<!-- Map Overlay Controls -->
+<div class="absolute bottom-margin-desktop left-margin-desktop flex flex-col gap-2">
+<button class="w-10 h-10 bg-surface-container-lowest border border-outline shadow-sm flex items-center justify-center hover:bg-surface-variant">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-lowest border border-outline shadow-sm flex items-center justify-center hover:bg-surface-variant">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+<div class="absolute top-4 right-4 bg-surface-container-lowest border border-outline-variant p-3 rounded shadow-sm">
+<h3 class="text-label-md font-bold mb-2">Map Legend</h3>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-error rounded-full"></div>
+<span class="text-label-sm">Detected (Severe)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-secondary rounded-full"></div>
+<span class="text-label-sm">Assigned (In-Progress)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-green-700 rounded-full"></div>
+<span class="text-label-sm">Repaired (Resolved)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right 1/3: Sidebar List Area -->
+<aside class="w-full md:w-1/3 bg-surface-container-low flex flex-col h-full">
+<!-- Filter Header -->
+<div class="p-4 border-b border-outline-variant bg-surface-container shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-headline-sm font-headline-sm text-primary">Active Potholes</h2>
+<span class="bg-primary-container text-on-primary-container px-2 py-0.5 rounded text-label-sm font-bold">128 Detected</span>
+</div>
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+<button class="px-4 py-1.5 rounded-full bg-primary text-on-primary text-label-sm whitespace-nowrap">All</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm border border-outline-variant whitespace-nowrap hover:bg-surface-variant transition-colors">Detected</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm border border-outline-variant whitespace-nowrap hover:bg-surface-variant transition-colors">Assigned</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm border border-outline-variant whitespace-nowrap hover:bg-surface-variant transition-colors">Repaired</button>
+</div>
+</div>
+<!-- Scrollable List -->
+<div class="flex-grow overflow-y-auto p-4 flex flex-col gap-4 no-scrollbar pb-32">
+<!-- Pothole Card 1: Severe/Detected -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 flex flex-col gap-3 hover:border-primary transition-colors cursor-pointer group">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-error font-bold text-label-sm uppercase tracking-wider">Severe</span>
+<h4 class="text-body-md font-bold text-on-surface">ID: #PV-9082</h4>
+</div>
+<div class="bg-error-container text-on-error-container px-3 py-1 rounded text-label-sm font-bold">Detected</div>
+</div>
+<div class="grid grid-cols-2 gap-4 text-label-sm">
+<div class="flex flex-col">
+<span class="text-on-surface-variant opacity-60">Coordinates</span>
+<span class="font-medium">17.7231° N, 83.3148° E</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant opacity-60">Confidence</span>
+<span class="text-secondary font-bold">94% AI Score</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-2">
+<button class="flex-grow bg-primary text-on-primary py-2 rounded text-label-md font-bold hover:bg-primary-container transition-colors">Assign Team</button>
+<button class="w-10 h-10 border border-outline flex items-center justify-center hover:bg-surface-variant rounded">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</article>
+<!-- Pothole Card 2: Moderate/Assigned -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 flex flex-col gap-3 opacity-90">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-secondary font-bold text-label-sm uppercase tracking-wider">Moderate</span>
+<h4 class="text-body-md font-bold text-on-surface">ID: #PV-9083</h4>
+</div>
+<div class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded text-label-sm font-bold">Assigned</div>
+</div>
+<div class="grid grid-cols-2 gap-4 text-label-sm">
+<div class="flex flex-col">
+<span class="text-on-surface-variant opacity-60">Coordinates</span>
+<span class="font-medium">17.7122° N, 83.3091° E</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant opacity-60">Team</span>
+<span class="font-bold">Maintenance B-4</span>
+</div>
+</div>
+<div class="pt-2">
+<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary w-2/3 h-full"></div>
+</div>
+<div class="flex justify-between mt-1 text-[10px] font-bold text-on-surface-variant">
+<span>REPAIR PROGRESS</span>
+<span>65%</span>
+</div>
+</div>
+<button class="w-full border border-primary text-primary py-2 rounded text-label-md font-bold hover:bg-primary hover:text-on-primary transition-all">Update Status</button>
+</article>
+<!-- Pothole Card 3: Resolved/Repaired -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-green-700 font-bold text-label-sm uppercase tracking-wider">Resolved</span>
+<h4 class="text-body-md font-bold text-on-surface">ID: #PV-9084</h4>
+</div>
+<div class="bg-green-100 text-green-800 px-3 py-1 rounded text-label-sm font-bold">Repaired</div>
+</div>
+<div class="grid grid-cols-2 gap-4 text-label-sm">
+<div class="flex flex-col">
+<span class="text-on-surface-variant opacity-60">Closed On</span>
+<span class="font-medium">24 Oct, 09:45 AM</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant opacity-60">Verification</span>
+<span class="text-green-700 font-bold">Verified ✅</span>
+</div>
+</div>
+<div class="h-20 w-full rounded overflow-hidden mt-1 border border-outline-variant">
+<img class="w-full h-full object-cover grayscale-0 hover:grayscale transition-all duration-300" data-alt="A clear, high-resolution official photograph showing a perfectly repaired section of asphalt road in a sunny urban environment. The patch is dark, fresh, and smooth, seamlessly integrated with the surrounding older pavement. White road markings are visible nearby, and the lighting is bright midday sun, highlighting the professional quality of the public works repair." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn_wsNF4ug2l4CV2IEYb7UnnIZtQFqHwBLQaPIOx4e4rQOC3Qm0Oq37aw0xKjUN68wj-ixSnLM9PlATf3oXuld466uu5_riCGH3JPdq0nu3wn0MenTsvb2zDVwkOuE3TWp024MUXUgO99knxaf8LAPSaXv9FqCiGfequGsaZNFmopdhvLMVDem_ASNRlnV4d8b92YQ8i_UNzMFY8K9Nl0Vu6KweSHSQwsX0ARISGpM_CSklDJsZ1Nh">
+</div>
+</article>
+<!-- Pothole Card 4: New/Detected -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 flex flex-col gap-3 hover:border-primary transition-colors cursor-pointer">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-error font-bold text-label-sm uppercase tracking-wider">Critical</span>
+<h4 class="text-body-md font-bold text-on-surface">ID: #PV-9091</h4>
+</div>
+<div class="bg-error-container text-on-error-container px-3 py-1 rounded text-label-sm font-bold">Detected</div>
+</div>
+<div class="grid grid-cols-2 gap-4 text-label-sm">
+<div class="flex flex-col">
+<span class="text-on-surface-variant opacity-60">Location</span>
+<span class="font-medium">Sector 4 Main Road</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant opacity-60">Confidence</span>
+<span class="text-secondary font-bold">98% AI Score</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-2 rounded text-label-md font-bold hover:bg-primary-container transition-colors">Assign Team</button>
+</article>
+</div>
+</aside>
+</main>
+<!-- Contextual Stats Bar (Desktop Only) -->
+<footer class="hidden md:flex fixed bottom-0 left-0 w-2/3 bg-surface border-t border-outline-variant h-12 items-center px-margin-desktop gap-12 z-40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">analytics</span>
+<span class="text-label-sm font-bold text-on-surface">System Status: <span class="text-green-700">Online</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-medium text-on-surface-variant">Last AI Scan: <span class="text-on-surface">2 mins ago</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-medium text-on-surface-variant">Ward 52 Coverage: <span class="text-on-surface">88.4%</span></span>
+</div>
+</footer>
+<!-- Interactive micro-scripts -->
+<script>
+        // Simple micro-interaction for markers
+        document.querySelectorAll('.custom-marker').forEach(marker => {
+            marker.addEventListener('click', () => {
+                // Focus sidebar list logic would go here
+                marker.classList.add('animate-pulse');
+                setTimeout(() => marker.classList.remove('animate-pulse'), 1000);
+            });
+        });
+
+        // Filter chip toggle effect
+        document.querySelectorAll('.no-scrollbar button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.no-scrollbar button').forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary');
+                    b.classList.add('bg-surface-container-highest', 'text-on-surface-variant');
+                });
+                this.classList.remove('bg-surface-container-highest', 'text-on-surface-variant');
+                this.classList.add('bg-primary', 'text-on-primary');
+            });
+        });
+    </script>
+</body></html>

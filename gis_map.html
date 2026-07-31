@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - Live GIS Map</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --on-surface: #1A2530;
+            --on-primary: #FFFFFF;
+            --error: #C0392B;
+            --success: #2E8B57;
+            --border-radius: 0.25rem;
+            --spacing-base: 4px;
+            --spacing-gutter: 16px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-gutter);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header .back-btn {
+            background: none;
+            border: none;
+            color: var(--on-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .header .header-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--on-primary);
+        }
+
+        .header .ward-badge {
+            background: rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            border: 1px solid #E8842C;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Map Container */
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #map {
+            height: calc(100vh - 56px);
+            width: 100%;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            background-color: var(--background);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            padding: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: var(--on-surface);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .control-btn:hover {
+            background-color: var(--light-grey);
+        }
+
+        .control-btn.active {
+            background-color: var(--accent);
+            color: var(--on-primary);
+        }
+
+        /* Filter Panel */
+        .filter-panel {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background-color: var(--background);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-gutter);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+            max-width: 200px;
+        }
+
+        .filter-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--on-surface);
+            margin-bottom: var(--spacing-base);
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--light-grey);
+        }
+
+        .filter-option:last-child {
+            border-bottom: none;
+        }
+
+        .filter-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .filter-color.detected { background-color: var(--error); }
+        .filter-color.assigned { background-color: var(--accent); }
+        .filter-color.repaired { background-color: var(--success); }
+
+        .filter-label {
+            font-size: 0.8125rem;
+            color: var(--on-surface);
+        }
+
+        .filter-count {
+            margin-left: auto;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--on-surface);
+        }
+
+        /* Pothole List Side Panel */
+        .pothole-list {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background-color: var(--background);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            max-width: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .pothole-list-header {
+            padding: var(--spacing-base) var(--spacing-gutter);
+            background-color: var(--primary);
+            color: var(--on-primary);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .pothole-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-base) var(--spacing-gutter);
+            border-bottom: 1px solid var(--light-grey);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .pothole-item:hover {
+            background-color: var(--light-grey);
+        }
+
+        .pothole-item:last-child {
+            border-bottom: none;
+        }
+
+        .pothole-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .pothole-status.detected { background-color: var(--error); }
+        .pothole-status.assigned { background-color: var(--accent); }
+        .pothole-status.repaired { background-color: var(--success); }
+
+        .pothole-id {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--on-surface);
+            margin-right: 8px;
+        }
+
+        .pothole-location {
+            font-size: 0.75rem;
+            color: var(--on-surface-variant);
+        }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column !important; gap: 10px !important; align-items: flex-start !important; padding: 12px 16px !important; }
+            .dashboard-nav { flex-wrap: wrap !important; gap: 10px !important; padding: 10px 16px !important; }
+            .map-container { height: calc(100vh - 160px) !important; }
+            .map-filters { top: 10px !important; left: 10px !important; padding: 10px !important; font-size: 0.8rem !important; }
+            .pothole-list { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="back-btn" onclick="history.back()">←</button>
+        <span class="header-title">Live GIS Map — Ward 52 (Siripuram)</span>
+        <select class="ward-selector" disabled title="Ward selection is locked for Field Officers" style="background:#F4F6F8; padding:6px 12px; border-radius:4px; font-weight:600;">
+            <option value="Ward 52">Ward 52 (Locked)</option>
+        </select>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav style="background: #152A47; padding: 8px 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="officer_overview.html" style="color: #FFF; text-decoration: none; font-size: 0.85rem;">📊 Overview</a>
+        <a href="gis_map.html" style="color: #E8842C; text-decoration: none; font-weight: 700; font-size: 0.85rem;">🗺️ GIS Map</a>
+        <a href="reports_list.html" style="color: #FFF; text-decoration: none; font-size: 0.85rem;">📋 Reports Directory</a>
+        <a href="admin_overview.html" style="color: #FFF; text-decoration: none; font-size: 0.85rem;">🏛️ Admin City Overview</a>
+        <a href="admin_officers.html" style="color: #FFF; text-decoration: none; font-size: 0.85rem;">👥 Officer Mgmt</a>
+        <a href="admin_settings.html" style="color: #FFF; text-decoration: none; font-size: 0.85rem;">⚙️ Settings</a>
+    </nav>
+
+    <!-- Map Container -->
+    <div class="map-container">
+        <div id="map"></div>
+
+        <!-- Filter Panel -->
+        <div class="filter-panel">
+            <div class="filter-title">Filter by Status</div>
+            <div class="filter-option">
+                <div class="filter-color detected"></div>
+                <span class="filter-label">Detected</span>
+                <span class="filter-count">18</span>
+            </div>
+            <div class="filter-option">
+                <div class="filter-color assigned"></div>
+                <span class="filter-label">Assigned</span>
+                <span class="filter-count">12</span>
+            </div>
+            <div class="filter-option">
+                <div class="filter-color repaired"></div>
+                <span class="filter-label">Repaired</span>
+                <span class="filter-count">24</span>
+            </div>
+        </div>
+
+        <!-- Map Controls -->
+        <div class="map-controls">
+            <button class="control-btn active" onclick="filterStatus('all')">
+                🗺️ All
+            </button>
+            <button class="control-btn" onclick="filterStatus('detected')">
+                🔴 Detected
+            </button>
+            <button class="control-btn" onclick="filterStatus('assigned')">
+                🟡 Assigned
+            </button>
+            <button class="control-btn" onclick="filterStatus('repaired')">
+                🟢 Repaired
+            </button>
+        </div>
+
+        <!-- Pothole List Side Panel -->
+        <div class="pothole-list">
+            <div class="pothole-list-header">Recent Reports</div>
+            <div class="pothole-item" onclick="viewPothole('1042')">
+                <div class="pothole-status detected"></div>
+                <span class="pothole-id">#1042</span>
+                <span class="pothole-location">DRC Junction</span>
+            </div>
+            <div class="pothole-item" onclick="viewPothole('1041')">
+                <div class="pothole-status assigned"></div>
+                <span class="pothole-id">#1041</span>
+                <span class="pothole-location">St. Mary's Road</span>
+            </div>
+            <div class="pothole-item" onclick="viewPothole('1040')">
+                <div class="pothole-status repaired"></div>
+                <span class="pothole-id">#1040</span>
+                <span class="pothole-location">Model Colony Gate</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize Map
+        const map = L.map('map').setView([17.6868, 83.2185], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Sample pothole data
+        const potholes = [
+            { id: '1042', lat: 17.6906, lng: 83.3069, status: 'detected', severity: 'high', location: 'DRC Junction' },
+            { id: '1041', lat: 17.6830, lng: 83.2200, status: 'assigned', severity: 'medium', location: 'St. Mary\'s Road' },
+            { id: '1040', lat: 17.6850, lng: 83.2150, status: 'repaired', severity: 'low', location: 'Model Colony Gate' },
+            { id: '1039', lat: 17.6880, lng: 83.2190, status: 'detected', severity: 'medium', location: 'Vijayawada Road' },
+            { id: '1038', lat: 17.6820, lng: 83.2170, status: 'assigned', severity: 'high', location: 'Rushikonda Road' }
+        ];
+
+        // Status colors
+        const statusColors = {
+            'detected': '#C0392B',
+            'assigned': '#E8842C',
+            'repaired': '#2E8B57'
+        };
+
+        // Add markers to map
+        potholes.forEach(pothole => {
+            const marker = L.marker([pothole.lat, pothole.lng], {
+                icon: L.divIcon({
+                    html: `<div style="background-color: ${statusColors[pothole.status]}; border-radius: 50%; width: 14px; height: 14px; border: 2px solid white;"></div>`,
+                    className: 'pothole-marker',
+                    iconSize: [14, 14]
+                })
+            }).addTo(map);
+
+            marker.bindPopup(`
+                <strong>Pothole #${pothole.id}</strong><br>
+                ${pothole.location}<br>
+                Status: ${pothole.status.charAt(0).toUpperCase() + pothole.status.slice(1)}<br>
+                Severity: ${pothole.severity}
+            `);
+        });
+
+        // Filter function
+        function filterStatus(status) {
+            const buttons = document.querySelectorAll('.control-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // In real app: filter markers based on status
+            console.log(`Filtering by status: ${status}`);
+        }
+
+        // View pothole details
+        function viewPothole(potholeId) {
+            window.location.href = `pothole_detail.html?id=${potholeId}`;
+        }
+    </script>
+</body>
+</html>

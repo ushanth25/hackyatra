@@ -1,0 +1,243 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GVMC Road Watch - Report Detail</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#373a3b",
+                        "on-secondary-container": "#683300",
+                        "secondary-container": "#fc943b",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#c5c7c8",
+                        "surface-container-low": "#f0f4fa",
+                        "on-secondary-fixed": "#301400",
+                        "on-surface-variant": "#43474e",
+                        "surface-container-high": "#e5e8ee",
+                        "surface": "#f6f9ff",
+                        "surface-container": "#eaeef4",
+                        "on-primary-fixed": "#001c3b",
+                        "inverse-primary": "#aec8f4",
+                        "on-primary-fixed-variant": "#2d476d",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c4c6cf",
+                        "on-background": "#171c20",
+                        "primary-fixed": "#d5e3ff",
+                        "outline": "#74777f",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#a2a4a5",
+                        "background": "#f6f9ff",
+                        "primary": "#032448",
+                        "on-primary-container": "#8ba4cf",
+                        "on-secondary-fixed-variant": "#703800",
+                        "surface-tint": "#465f86",
+                        "inverse-surface": "#2c3136",
+                        "surface-variant": "#dfe3e9",
+                        "on-surface": "#171c20",
+                        "secondary": "#934b00",
+                        "primary-fixed-dim": "#aec8f4",
+                        "primary-container": "#1f3a5f",
+                        "tertiary": "#222425",
+                        "surface-container-highest": "#dfe3e9",
+                        "on-tertiary-fixed": "#191c1d",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#edf1f7",
+                        "secondary-fixed": "#ffdcc5",
+                        "surface-bright": "#f6f9ff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#454748",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#e1e3e4",
+                        "surface-dim": "#d6dae0",
+                        "secondary-fixed-dim": "#ffb782"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "base": "4px",
+                        "input-padding": "12px 16px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Noto Sans"],
+                        "headline-sm": ["Noto Sans"],
+                        "headline-md": ["Noto Sans"],
+                        "body-lg": ["Noto Sans"],
+                        "headline-lg-mobile": ["Noto Sans"],
+                        "headline-lg": ["Noto Sans"],
+                        "body-md": ["Noto Sans"],
+                        "label-sm": ["Noto Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Noto Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-primary-container text-on-primary flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 border-b border-outline">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center h-10 w-10 hover:bg-white/10 transition-colors rounded-full">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-headline-sm font-headline-sm font-bold text-on-primary">Report #1042</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-on-primary" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<main class="pt-16 pb-20">
+<!-- Map View Section -->
+<section class="w-full h-64 relative bg-surface-container-high overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="A clean, flat-style vector map of a residential area in Visakhapatnam, India. The map features simplified road networks in light gray and muted green areas representing parks. A single prominent orange map pin marks a specific location on a residential street. The lighting is bright and uniform, reflecting a functional and official government utility aesthetic." data-location="Visakhapatnam, India" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJ_-eBQuoAmvHL24CDok9fQRWSk-3zxJVh1_2DP-S3FD9BmRZMEaRYQqmf9at6cZQIdZtfhmoGQWQ778gcSRoJpaattiyroN_kMGIwWJhLctHATtXtQd2S1-AmgbShgQiXrcQRx0xLjhxyIr_hKzT1Hi1g2Hitb4nkB_xngUyOOBtvEXtFYuCoNdv9Jf15UhFBtekrh3NUBu27LnictDTnqE040OVchueRQ8SkqlxpfhEpzuZL2cd5')">
+</div>
+<div class="absolute inset-0 pointer-events-none border-b border-outline"></div>
+</section>
+<!-- Status Banner -->
+<section class="bg-secondary text-on-secondary px-margin-mobile py-3 flex items-center gap-3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment_ind</span>
+<span class="text-label-md font-label-md">Status: Assigned to Field Officer</span>
+</section>
+<!-- Content Canvas -->
+<div class="px-margin-mobile py-6 space-y-6">
+<!-- Details Panel -->
+<section class="bg-surface-container-lowest border border-outline p-4 space-y-4">
+<h2 class="text-headline-sm font-headline-sm text-primary mb-2">Report Details</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<p class="text-label-sm font-label-sm text-on-surface-variant">Severity</p>
+<div class="flex items-center gap-2 text-error font-bold">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+<p class="text-body-md font-body-md">Severe</p>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-label-sm font-label-sm text-on-surface-variant">Date Reported</p>
+<p class="text-body-md font-body-md">Oct 24, 2023</p>
+</div>
+<div class="col-span-2 space-y-1">
+<p class="text-label-sm font-label-sm text-on-surface-variant">Location</p>
+<p class="text-body-md font-body-md">Ward 52, Visakhapatnam, AP</p>
+</div>
+</div>
+<!-- Thumbnail -->
+<div class="mt-4">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-2">Evidence Photo</p>
+<div class="w-full h-48 border border-outline-variant bg-cover bg-center rounded-sm" data-alt="A close-up, high-resolution photo of a large, jagged pothole in the middle of a paved city road. The surrounding asphalt shows signs of wear and cracking. The lighting is bright daylight, casting sharp shadows within the crater of the pothole. The image is framed as an official documentation photo for a municipal maintenance report." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB9ZmKT2FmDRQWZW-9V6_-9dBhjUJZVU1GgTE5_hpr5UV_PgzKQGDgahq2x2NhEEMxuSIH7n01J8wbu7pXwy82clZ_fpzfOrMAJrrjgBdtIBpuDBIjoFYkkHFsjLCyNEGIi4fpehtdQsxFC_pCltE1BkrZMciIR-mbjxB2O3AwQqUp9xo8FaoTvH34cHg9zjIi_T9pR96k2euwRu-tROv-HapZr-AfvsD3_9UruaO8niigbK7plROww')">
+</div>
+</div>
+</section>
+<!-- Timeline Section -->
+<section class="bg-surface p-4">
+<h2 class="text-headline-sm font-headline-sm text-primary mb-6">Progress Timeline</h2>
+<div class="relative ml-3 space-y-8">
+<!-- Line -->
+<div class="absolute left-[11px] top-2 bottom-2 w-0.5 bg-outline-variant"></div>
+<!-- Step 1: Detected -->
+<div class="relative flex items-start gap-4">
+<div class="z-10 bg-green-700 text-white rounded-full p-0.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-on-surface">Detected</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Oct 24, 2023 • 09:15 AM</p>
+</div>
+</div>
+<!-- Step 2: Verified -->
+<div class="relative flex items-start gap-4">
+<div class="z-10 bg-green-700 text-white rounded-full p-0.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-on-surface">Verified</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Oct 24, 2023 • 02:30 PM</p>
+</div>
+</div>
+<!-- Step 3: Assigned -->
+<div class="relative flex items-start gap-4">
+<div class="z-10 bg-green-700 text-white rounded-full p-0.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-on-surface">Assigned</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Oct 25, 2023 • 10:00 AM</p>
+</div>
+</div>
+<!-- Step 4: Repaired -->
+<div class="relative flex items-start gap-4">
+<div class="z-10 bg-surface-variant text-on-surface-variant border border-outline rounded-full p-0.5 flex items-center justify-center w-6 h-6">
+<!-- Empty circle for pending -->
+</div>
+<div>
+<p class="text-label-md font-label-md text-on-surface-variant">Repaired</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Expected completion: 48-72 hours</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Actions -->
+<div class="flex flex-col gap-3 pt-4">
+<button class="w-full bg-secondary text-on-secondary font-semibold py-3 flex items-center justify-center gap-2 rounded-sm transition-transform active:scale-[0.98]">
+<span class="material-symbols-outlined">chat</span>
+                    Message Officer
+                </button>
+<button class="w-full border border-primary text-primary font-semibold py-3 flex items-center justify-center gap-2 rounded-sm transition-transform active:scale-[0.98]">
+<span class="material-symbols-outlined">share</span>
+                    Share Report
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface h-16 pb-safe border-t border-outline flex justify-around items-center">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="add_a_photo">add_a_photo</span>
+<span class="text-label-sm font-label-sm">Report</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-label-sm font-label-sm">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="text-label-sm font-label-sm">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</a>
+</nav>
+</body></html>

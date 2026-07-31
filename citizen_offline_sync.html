@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - Offline Sync Queue</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --on-surface: #1A2530;
+            --error: #C0392B;
+            --success: #2E8B57;
+            --border-radius: 8px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--light-grey);
+            color: var(--on-surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 440px;
+            background-color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.08);
+        }
+
+        .header {
+            background-color: var(--primary);
+            color: #FFFFFF;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header h1 {
+            font-size: 1.1rem;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .network-banner {
+            background: #FEF3C7;
+            border-bottom: 1px solid #FCD34D;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #92400E;
+            font-weight: 600;
+        }
+        .network-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .content {
+            padding: 16px;
+            flex: 1;
+        }
+
+        .queue-summary {
+            background: var(--light-grey);
+            border: 1px solid #E2E8F0;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .queue-count {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .queue-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .queue-card {
+            border: 1px solid #E2E8F0;
+            border-radius: var(--border-radius);
+            padding: 12px 14px;
+            background: #FFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .queue-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            color: var(--primary);
+        }
+        .queue-info p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #64748B;
+        }
+
+        .badge-pending {
+            background: #FFEDD5;
+            color: #C2410C;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .action-bar {
+            padding: 16px;
+            background: #FFF;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .btn-sync {
+            width: 100%;
+            background-color: var(--accent);
+            color: #FFF;
+            border: none;
+            padding: 14px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .nav-back {
+            color: #FFF;
+            text-decoration: none;
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Header -->
+        <div class="header">
+            <a href="citizen_profile.html" class="nav-back"><span class="material-symbols-outlined">arrow_back</span></a>
+            <h1>Offline Sync Queue</h1>
+        </div>
+
+        <!-- Network Banner -->
+        <div class="network-banner" id="networkBanner">
+            <div class="network-badge">
+                <span class="material-symbols-outlined" style="font-size: 20px;">wifi_off</span>
+                <span>Network Offline — Logging locally</span>
+            </div>
+            <button style="border:none; background:transparent; font-weight:700; color:#92400E; cursor:pointer;" onclick="toggleNetwork()">Simulate Online</button>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="queue-summary">
+                <div>
+                    <div style="font-size: 0.8rem; color: #64748B; font-weight:600;">PENDING SYNC ITEMS</div>
+                    <div class="queue-count" id="queueCount">3 Reports</div>
+                </div>
+                <span class="material-symbols-outlined" style="font-size: 36px; color: var(--accent);">cloud_queue</span>
+            </div>
+
+            <div class="queue-list" id="queueList">
+                <div class="queue-card">
+                    <div class="queue-info">
+                        <h4>Auto-Detect Shock #104</h4>
+                        <p>GPS: 17.7231° N, 83.3012° E • High Severity (2.8g)</p>
+                        <p style="margin-top: 2px;">Captured: Today, 14:22 PM</p>
+                    </div>
+                    <span class="badge-pending">QUEUED</span>
+                </div>
+
+                <div class="queue-card">
+                    <div class="queue-info">
+                        <h4>Auto-Detect Shock #105</h4>
+                        <p>GPS: 17.7245° N, 83.3034° E • Medium Severity (1.9g)</p>
+                        <p style="margin-top: 2px;">Captured: Today, 14:28 PM</p>
+                    </div>
+                    <span class="badge-pending">QUEUED</span>
+                </div>
+
+                <div class="queue-card">
+                    <div class="queue-info">
+                        <h4>Manual Photo Report #106</h4>
+                        <p>Location: Beach Road Ward 52 • Photo attached</p>
+                        <p style="margin-top: 2px;">Captured: Today, 14:35 PM</p>
+                    </div>
+                    <span class="badge-pending">QUEUED</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="action-bar">
+            <button class="btn-sync" onclick="syncNow()">
+                <span class="material-symbols-outlined">sync</span>
+                Sync Pending Items Now
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let isOnline = false;
+
+        function toggleNetwork() {
+            isOnline = !isOnline;
+            const banner = document.getElementById('networkBanner');
+            if (isOnline) {
+                banner.style.background = '#DCFCE7';
+                banner.style.borderColor = '#86EFAC';
+                banner.style.color = '#166534';
+                banner.innerHTML = `
+                    <div class="network-badge">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">wifi</span>
+                        <span>Network Restored — Ready to sync</span>
+                    </div>
+                    <button style="border:none; background:transparent; font-weight:700; color:#166534; cursor:pointer;" onclick="toggleNetwork()">Simulate Offline</button>
+                `;
+            } else {
+                banner.style.background = '#FEF3C7';
+                banner.style.borderColor = '#FCD34D';
+                banner.style.color = '#92400E';
+                banner.innerHTML = `
+                    <div class="network-badge">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">wifi_off</span>
+                        <span>Network Offline — Logging locally</span>
+                    </div>
+                    <button style="border:none; background:transparent; font-weight:700; color:#92400E; cursor:pointer;" onclick="toggleNetwork()">Simulate Online</button>
+                `;
+            }
+        }
+
+        function syncNow() {
+            if (!isOnline) {
+                alert('Device is currently offline. Please restore connectivity or click "Simulate Online" first.');
+                return;
+            }
+            alert('Uploading 3 pending reports to GVMC Firestore...');
+            document.getElementById('queueList').innerHTML = `
+                <div style="text-align: center; padding: 40px; color: var(--success);">
+                    <span class="material-symbols-outlined" style="font-size: 48px;">check_circle</span>
+                    <h3>All Items Synced!</h3>
+                    <p style="font-size: 0.85rem; color: #64748B;">Reports successfully submitted to Firestore backend.</p>
+                </div>
+            `;
+            document.getElementById('queueCount').innerText = '0 Reports';
+        }
+    </script>
+</body>
+</html>

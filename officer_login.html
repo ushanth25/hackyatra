@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVMC Road Watch - Officer Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --accent: #E8842C;
+            --background: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --on-surface: #1A2530;
+            --on-primary: #FFFFFF;
+            --error: #C0392B;
+            --success: #2E8B57;
+            --border-radius: 0.25rem;
+            --spacing-base: 4px;
+            --spacing-gutter: 16px;
+            --font-noto: 'Noto Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-noto);
+            background-color: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .login-container {
+            text-align: center;
+            padding: var(--spacing-gutter);
+            max-width: 90%;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--primary);
+            border-radius: var(--border-radius);
+            margin: 0 auto var(--spacing-gutter);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .app-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 var(--spacing-base) 0;
+        }
+
+        .app-subtitle {
+            font-size: 1.125rem;
+            font-weight: 400;
+            color: var(--on-surface);
+            margin: 0 0 var(--spacing-gutter) 0;
+            line-height: 1.5;
+        }
+
+        .authorized-note {
+            background-color: var(--light-grey);
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-base);
+            margin-bottom: var(--spacing-gutter);
+            font-size: 0.9375rem;
+            color: var(--on-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .authorized-note::before {
+            content: "🔒";
+        }
+
+        .field {
+            text-align: left;
+            width: 100%;
+            margin: 0 0 var(--spacing-base) 0;
+        }
+
+        .label {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--on-surface);
+            margin-bottom: var(--spacing-base);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--light-grey);
+            border-radius: var(--border-radius);
+            background-color: var(--background);
+            font-size: 1rem;
+            color: var(--on-surface);
+            box-sizing: border-box;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(31, 58, 95, 0.2);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            margin-top: var(--spacing-base);
+            text-align: left;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: var(--on-primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: var(--spacing-base);
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #d47325;
+        }
+
+        .forgot-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9375rem;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-placeholder">Emblem</div>
+        <h1 class="app-title">GVMC Road Watch</h1>
+        <p class="app-subtitle">Officer / Admin Portal</p>
+
+        <div class="authorized-note">
+            Authorized personnel only - GVMC Roads & Buildings Department
+        </div>
+
+        <form class="login-form" onsubmit="event.preventDefault();">
+            <!-- Email Field -->
+            <div class="field">
+                <label class="label" for="email">Official Email</label>
+                <input class="input-field" id="email" type="email" placeholder="officer@gvmc.gov.in" required>
+            </div>
+
+            <!-- Password Field -->
+            <div class="field">
+                <label class="label" for="password">Password</label>
+                <input class="input-field" id="password" type="password" placeholder="••••••••" required>
+            </div>
+
+            <!-- Forgot password / First-time activation -->
+            <div class="field" style="margin-top: 10px;">
+                <a href="officer_reset_password.html" class="forgot-link">Activate Account / Reset Password</a>
+            </div>
+
+            <!-- Login Button -->
+            <button class="btn" type="submit" onclick="window.location.href='officer_overview.html'">Login to Dashboard</button>
+        </form>
+
+        <!-- Footer Note -->
+        <p style="margin-top: var(--spacing-gutter); font-size: 0.8125rem; color: var(--on-surface);">
+            No self-registration available. <br>
+            Contact your department administrator to request access.
+        </p>
+    </div>
+
+    <script>
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            window.location.href = 'officer_overview.html';
+        });
+    </script>
+</body>
+</html>
+</body>
+</html>
