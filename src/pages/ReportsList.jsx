@@ -15,6 +15,7 @@ export function ReportsList({ onNavigate, reports = [] }) {
               <tr style={{ background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
                 <th style={{ padding: 12 }}>ID</th>
                 <th style={{ padding: 12 }}>Location</th>
+                <th style={{ padding: 12 }}>Confirmations / Hits</th>
                 <th style={{ padding: 12 }}>Detection Source</th>
                 <th style={{ padding: 12 }}>Peak g-Force</th>
                 <th style={{ padding: 12 }}>Action</th>
@@ -25,6 +26,11 @@ export function ReportsList({ onNavigate, reports = [] }) {
                 <tr key={report.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
                   <td style={{ padding: 12, fontWeight: 700, color: '#1F3A5F' }}>{report.id}</td>
                   <td style={{ padding: 12 }}>{report.location}</td>
+                  <td style={{ padding: 12 }}>
+                    <span style={{ background: '#EFF6FF', color: '#1D4ED8', padding: '4px 10px', borderRadius: 12, fontWeight: 800, fontSize: '0.75rem' }}>
+                      🔥 {report.hitCount || 1} Shocks Logged
+                    </span>
+                  </td>
                   <td style={{ padding: 12 }}>{report.source}</td>
                   <td style={{ padding: 12, color: report.severity === 'high' ? '#C0392B' : '#E8842C', fontWeight: 700 }}>
                     {report.gForce}

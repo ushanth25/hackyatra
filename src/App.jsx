@@ -38,6 +38,7 @@ export default function App() {
       coords: '17.7231° N, 83.3012° E',
       source: 'Auto-Detect (Z-Shock)',
       gForce: '2.9g (High)',
+      hitCount: 5,
       status: 'DETECTED',
       statusMark: 'Detected ⚠️',
       severity: 'high',
@@ -53,6 +54,7 @@ export default function App() {
       coords: '17.7120° N, 83.2950° E',
       source: 'Citizen App',
       gForce: '3.1g (Critical)',
+      hitCount: 3,
       status: 'VERIFIED',
       statusMark: 'Mark Verified ✅',
       severity: 'high',
@@ -68,6 +70,7 @@ export default function App() {
       coords: '17.7340° N, 83.3120° E',
       source: 'Auto-Detect (Z-Shock)',
       gForce: '2.5g (Moderate)',
+      hitCount: 2,
       status: 'ASSIGNED',
       statusMark: 'Assign Contractor 🏗️',
       severity: 'medium',
@@ -85,8 +88,29 @@ export default function App() {
     setCurrentView(viewName);
   };
 
+  // Add or Deduplicate Report by Location
   const addReport = (newReport) => {
-    setReports((prev) => [newReport, ...prev]);
+    setReports((prev) => {
+      const existingIndex = prev.findIndex(
+        (r) => r.location.toLowerCase() === newReport.location.toLowerCase() || r.coords === newReport.coords
+      );
+
+      if (existingIndex !== -1) {
+        // Same Location: Keep SAME ID, increment Hit Count & update g-Force
+        const updated = [...prev];
+        const existing = updated[existingIndex];
+        updated[existingIndex] = {
+          ...existing,
+          hitCount: (existing.hitCount || 1) + 1,
+          gForce: newReport.gForce,
+          source: `${existing.source} (+${existing.hitCount || 1} hits)`
+        };
+        return updated;
+      } else {
+        // New Location: Add new ID
+        return [{ ...newReport, hitCount: 1 }, ...prev];
+      }
+    });
   };
 
   const updateReportStatus = (id, newStatus, statusMark, verificationPhoto) => {
@@ -160,7 +184,7 @@ export default function App() {
 
       {/* Render Active React Page Component */}
       {currentView === 'home' && <CitizenHome onNavigate={navigate} />}
-      {currentView === 'auto_detect' && <AutoDetectActive onNavigate={navigate} />}
+      {currentView === 'auto_detect' && <AutoDetectActive onNavigate={navigate} onAddReport={addReport} />}
       {currentView === 'report' && <ReportPothole onNavigate={navigate} onAddReport={addReport} />}
       {currentView === 'my_reports' && <MyReports onNavigate={navigate} reports={reports} />}
       {currentView === 'report_detail' && <ReportDetail onNavigate={navigate} />}
