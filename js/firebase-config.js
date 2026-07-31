@@ -1,15 +1,19 @@
-/**
- * GVMC Road Watch - Production Firebase Cloud SDK Setup (Section 3 & 4)
- * Replace placeholder keys with your Firebase Project credentials
- */
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
-export const firebaseConfig = {
-    apiKey: "AIzaSyYOUR_FIREBASE_API_KEY",
-    authDomain: "gvmc-road-watch.firebaseapp.com",
-    projectId: "gvmc-road-watch",
-    storageBucket: "gvmc-road-watch.appspot.com",
-    messagingSenderId: "109823749123",
-    appId: "1:109823749123:web:8a9b0c1d2e3f4g5h"
+const firebaseConfig = {
+  apiKey: "AIzaSyDijnptDHnZzRI17SgbGq7WGlxr2TPJB10",
+  authDomain: "gvmc-road-watch.firebaseapp.com",
+  projectId: "gvmc-road-watch",
+  storageBucket: "gvmc-road-watch.firebasestorage.app",
+  messagingSenderId: "936374399743",
+  appId: "1:936374399743:web:424ce276dac15b9768d2ca",
+  measurementId: "G-DJNTPR5297"
 };
 
-console.log('[FIREBASE] SDK Configuration Initialized for Project:', firebaseConfig.projectId);
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
