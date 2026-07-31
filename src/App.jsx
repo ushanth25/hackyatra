@@ -18,9 +18,10 @@ import { AdminSettings } from './pages/AdminSettings.jsx';
 import { AdminLogin } from './pages/AdminLogin.jsx';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('home');
+  // Set default initial view to 'citizen_login' on application opening
+  const [currentView, setCurrentView] = useState('citizen_login');
   const [selectedIncidentId, setSelectedIncidentId] = useState('#PTH-1042');
-  const [currentUser, setCurrentUser] = useState({ email: 'citizen@gvmc.gov.in', name: 'Citizen User', role: 'citizen' });
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [notifications, setNotifications] = useState([
     {
@@ -169,7 +170,7 @@ export default function App() {
         <span>GVMC Road Watch</span>
         <div style={{ display: 'flex', gap: 10 }}>
           <button 
-            onClick={() => navigate('home')}
+            onClick={() => navigate('citizen_login')}
             style={{ background: currentView.startsWith('home') || currentView === 'auto_detect' || currentView === 'my_reports' || currentView.startsWith('citizen') ? '#E8842C' : '#334155', color: '#FFF', border: 'none', padding: '4px 10px', borderRadius: 4, cursor: 'pointer' }}
           >
             📱 Citizen App
@@ -190,9 +191,9 @@ export default function App() {
       </div>
 
       {/* Render Active React Page Component */}
-      {currentView === 'home' && <CitizenHome onNavigate={navigate} user={currentUser} />}
       {currentView === 'citizen_login' && <CitizenLogin onNavigate={navigate} onLoginSuccess={handleLoginSuccess} />}
       {currentView === 'citizen_register' && <CitizenRegister onNavigate={navigate} onLoginSuccess={handleLoginSuccess} />}
+      {currentView === 'home' && <CitizenHome onNavigate={navigate} user={currentUser} />}
       {currentView === 'auto_detect' && <AutoDetectActive onNavigate={navigate} onAddReport={addReport} />}
       {currentView === 'report' && <ReportPothole onNavigate={navigate} onAddReport={addReport} />}
       {currentView === 'my_reports' && <MyReports onNavigate={navigate} reports={reports} />}
