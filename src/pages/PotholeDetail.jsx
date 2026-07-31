@@ -13,9 +13,13 @@ export function PotholeDetail({ onNavigate, incidentId, reports = [], onUpdateSt
 
   const [verificationPhoto, setVerificationPhoto] = useState(currentIncident.verificationPhoto || null);
   const [activeAction, setActiveAction] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleActionClick = (actionName) => {
     setActiveAction(actionName);
+    setErrorMessage('');
+    setSuccessMessage('');
   };
 
   const handleVerificationPhotoUpload = (e) => {
@@ -24,6 +28,7 @@ export function PotholeDetail({ onNavigate, incidentId, reports = [], onUpdateSt
       const reader = new FileReader();
       reader.onloadend = () => {
         setVerificationPhoto(reader.result);
+        setErrorMessage(''); // Clear error on photo select
       };
       reader.readAsDataURL(file);
     }
@@ -31,13 +36,16 @@ export function PotholeDetail({ onNavigate, incidentId, reports = [], onUpdateSt
 
   const submitStatusChange = (newStatus, statusMark) => {
     if (!verificationPhoto) {
-      alert('Please upload a verification photo before submitting status update!');
+      setErrorMessage('⚠️ Verification photo is required before submitting status update.');
       return;
     }
+
     if (onUpdateStatus) {
       onUpdateStatus(currentIncident.id, newStatus, statusMark, verificationPhoto);
     }
-    alert(`Status for ${currentIncident.id} updated to "${statusMark}" with verification photo attached!`);
+
+    setErrorMessage('');
+    setSuccessMessage(`✓ Status for ${currentIncident.id} successfully updated to "${statusMark}" with verification photo attached!`);
     setActiveAction(null);
   };
 
@@ -48,6 +56,13 @@ export function PotholeDetail({ onNavigate, incidentId, reports = [], onUpdateSt
           <h2 style={{ color: '#1F3A5F', margin: 0 }}>Incident {currentIncident.id} — Detailed Inspection</h2>
           <button onClick={() => onNavigate('officer')} style={{ background: '#1F3A5F', color: '#FFF', border: 'none', padding: '8px 16px', borderRadius: 4, cursor: 'pointer' }}>Back to Dashboard</button>
         </div>
+
+        {/* Success Inline Message */}
+        {successMessage && (
+          <div style={{ background: '#DCFCE7', border: '1px solid #16A34A', color: '#166534', padding: '12px 16px', borderRadius: 6, marginBottom: 20, fontSize: '0.85rem', fontWeight: 700 }}>
+            {successMessage}
+          </div>
+        )}
 
         {/* Workflow Action Panel */}
         <div style={{ background: '#FFF', padding: 20, borderRadius: 6, border: '1px solid #E2E8F0', marginBottom: 20 }}>
@@ -76,16 +91,23 @@ export function PotholeDetail({ onNavigate, incidentId, reports = [], onUpdateSt
             </button>
           </div>
 
-          {/* Verification Photo Upload Requirement Popup / Box */}
+          {/* Verification Photo Upload Requirement Box */}
           {activeAction && (
             <div style={{ background: '#F8FAFC', border: '1px solid #CBD5E1', padding: 16, borderRadius: 6, marginTop: 10 }}>
               <h5 style={{ margin: '0 0 8px 0', color: '#1F3A5F' }}>📷 Verification Required for: <strong>{activeAction}</strong></h5>
               <p style={{ fontSize: '0.8rem', color: '#64748B', margin: '0 0 12px 0' }}>Please attach a verification photo of the site to complete this action.</p>
               
-              <label style={{ display: 'inline-block', background: '#EFF6FF', border: '1px dashed #3B82F6', padding: '10px 16px', borderRadius: 4, cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, color: '#1D4ED8', marginBottom: 12 }}>
+              <label style={{ display: 'inline-block', background: '#EFF6FF', border: `1px dashed ${errorMessage ? '#DC2626' : '#3B82F6'}`, padding: '10px 16px', borderRadius: 4, cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, color: '#1D4ED8', marginBottom: 8 }}>
                 {verificationPhoto ? '✓ Verification Photo Attached (Click to Change)' : '📷 Upload Verification Photo'}
                 <input type="file" accept="image/*" onChange={handleVerificationPhotoUpload} style={{ display: 'none' }} />
               </label>
+
+              {/* Red inline error text below photo button */}
+              {errorMessage && (
+                <div style={{ color: '#DC2626', fontSize: '0.78rem', fontWeight: 700, marginBottom: 12 }}>
+                  {errorMessage}
+                </div>
+              )}
 
               {verificationPhoto && (
                 <div style={{ width: 120, height: 90, borderRadius: 4, overflow: 'hidden', marginBottom: 12, border: '1px solid #CBD5E1' }}>
