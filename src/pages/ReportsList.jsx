@@ -29,9 +29,15 @@ export function ReportsList({ onNavigate, reports = [] }) {
                     <td style={{ padding: 12, fontWeight: 700, color: '#1F3A5F' }}>{report.id}</td>
                     <td style={{ padding: 12 }}>{report.location}</td>
                     <td style={{ padding: 12 }}>
-                      <span style={{ background: '#EFF6FF', color: '#1D4ED8', padding: '4px 10px', borderRadius: 12, fontWeight: 800, fontSize: '0.75rem' }}>
-                        🔥 {report.hitCount || 1} Shocks Logged
-                      </span>
+                      {isAuto ? (
+                        <span style={{ background: '#EFF6FF', color: '#1D4ED8', padding: '4px 10px', borderRadius: 12, fontWeight: 800, fontSize: '0.75rem' }}>
+                          🔥 {report.hitCount || 1} Shocks Logged
+                        </span>
+                      ) : (
+                        <span style={{ color: '#94A3B8', fontSize: '0.75rem', fontStyle: 'italic' }}>
+                          — (Manual Report)
+                        </span>
+                      )}
                     </td>
                     <td style={{ padding: 12 }}>
                       <span style={{
