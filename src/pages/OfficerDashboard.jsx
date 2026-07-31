@@ -4,8 +4,6 @@ export function OfficerDashboard({ onNavigate, reports = [], notifications = [] 
   const [ward] = useState('Ward 52 (Siripuram)');
   const [showNotifications, setShowNotifications] = useState(false);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
-
   return (
     <div style={{ fontFamily: 'Noto Sans, sans-serif', background: '#F4F6F8', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Top Bar */}
@@ -65,7 +63,6 @@ export function OfficerDashboard({ onNavigate, reports = [], notifications = [] 
         <button style={{ background: 'none', border: 'none', color: '#E8842C', fontWeight: 700, cursor: 'pointer' }}>📊 Overview</button>
         <button onClick={() => onNavigate('gis_map')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>🗺️ GIS Map</button>
         <button onClick={() => onNavigate('reports_list')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>📋 Incident Table</button>
-        <button onClick={() => onNavigate('admin_overview')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>🏛️ Admin HQ View</button>
       </nav>
 
       {/* Content */}
