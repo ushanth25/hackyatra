@@ -4,9 +4,10 @@ export function ReportPothole({ onNavigate, onAddReport }) {
   const [severity, setSeverity] = useState('high');
   const [photoPreview, setPhotoPreview] = useState(null);
   const [notes, setNotes] = useState('');
-  const [locationText, setLocationText] = useState('Detecting GPS location...');
-  const [coords, setCoords] = useState('17.7231° N, 83.3012° E');
-  const [ward, setWard] = useState('Ward 52');
+  const [locationText] = useState('17.7231° N, 83.3012° E • Beach Road Ward 52');
+  const [coords] = useState('17.7231° N, 83.3012° E');
+  const [ward] = useState('Ward 52');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
@@ -14,12 +15,19 @@ export function ReportPothole({ onNavigate, onAddReport }) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoPreview(reader.result);
+        setErrorMessage(''); // Clear error when photo is selected
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleSubmit = () => {
+    // Restrict submission if photo is missing
+    if (!photoPreview) {
+      setErrorMessage('⚠️ Photo is required. Please capture or attach a photo before submitting.');
+      return;
+    }
+
     const newId = `#PTH-${Math.floor(1045 + Math.random() * 9000)}`;
     const newReport = {
       id: newId,
@@ -32,7 +40,7 @@ export function ReportPothole({ onNavigate, onAddReport }) {
       statusMark: 'Detected ⚠️',
       severity: severity,
       notes: notes || 'Citizen submitted manual photo report.',
-      photo: photoPreview || 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=400&q=80',
+      photo: photoPreview,
       verificationPhoto: null
     };
 
@@ -53,7 +61,20 @@ export function ReportPothole({ onNavigate, onAddReport }) {
 
       <div style={{ padding: 20, flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
         {/* Photo Upload Zone */}
-        <label style={{ height: 160, background: '#F8FAFC', border: '2px dashed #CBD5E1', borderRadius: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#64748B', cursor: 'pointer', overflow: 'hidden', position: 'relative' }}>
+        <label style={{ 
+          height: 160, 
+          background: '#F8FAFC', 
+          border: `2px dashed ${errorMessage ? '#DC2626' : '#CBD5E1'}`, 
+          borderRadius: 8, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justify: 'center', 
+          color: '#64748B', 
+          cursor: 'pointer', 
+          overflow: 'hidden', 
+          position: 'relative' 
+        }}>
           <input 
             type="file" 
             accept="image/*" 
@@ -71,10 +92,17 @@ export function ReportPothole({ onNavigate, onAddReport }) {
           )}
         </label>
 
+        {/* Small Red Warning Message if photo is missing */}
+        {errorMessage && (
+          <div style={{ color: '#DC2626', fontSize: '0.78rem', fontWeight: 700, margin: '-8px 0 0 0' }}>
+            {errorMessage}
+          </div>
+        )}
+
         {/* Location Box */}
         <div style={{ background: '#F4F6F8', padding: 12, borderRadius: 8, fontSize: '0.85rem' }}>
           <strong style={{ color: '#1F3A5F', display: 'block' }}>GPS Coordinates Locked</strong>
-          <span style={{ color: '#64748B' }}>17.7231° N, 83.3012° E • Beach Road Ward 52</span>
+          <span style={{ color: '#64748B' }}>{locationText}</span>
         </div>
 
         {/* Severity Selector */}
