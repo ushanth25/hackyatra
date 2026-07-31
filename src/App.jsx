@@ -7,6 +7,7 @@ import { ReportDetail } from './pages/ReportDetail.jsx';
 import { CitizenProfile } from './pages/CitizenProfile.jsx';
 import { CitizenLogin } from './pages/CitizenLogin.jsx';
 import { CitizenRegister } from './pages/CitizenRegister.jsx';
+import { OfficerLogin } from './pages/OfficerLogin.jsx';
 import { OfflineSyncQueue } from './pages/OfflineSyncQueue.jsx';
 import { OfficerDashboard } from './pages/OfficerDashboard.jsx';
 import { OfficerResetPassword } from './pages/OfficerResetPassword.jsx';
@@ -18,10 +19,29 @@ import { AdminSettings } from './pages/AdminSettings.jsx';
 import { AdminLogin } from './pages/AdminLogin.jsx';
 
 export default function App() {
-  // Set default initial view to 'citizen_login' on application opening
   const [currentView, setCurrentView] = useState('citizen_login');
   const [selectedIncidentId, setSelectedIncidentId] = useState('#PTH-1042');
   const [currentUser, setCurrentUser] = useState(null);
+
+  // List of Admin HQ Provisioned Authorized Field Officers
+  const [authorizedOfficers, setAuthorizedOfficers] = useState([
+    {
+      id: 1,
+      name: 'R. Sharma (Field Officer)',
+      email: 'officer.ward52@gvmc.gov.in',
+      ward: 'Ward 52 (Siripuram)',
+      status: 'Active',
+      grantedDate: '01 Nov 2024'
+    },
+    {
+      id: 2,
+      name: 'K. Varma (Field Officer)',
+      email: 'officer.ward48@gvmc.gov.in',
+      ward: 'Ward 48 (MVP Colony)',
+      status: 'Active',
+      grantedDate: '05 Nov 2024'
+    }
+  ]);
 
   const [notifications, setNotifications] = useState([
     {
@@ -96,6 +116,16 @@ export default function App() {
     setCurrentUser(userObj);
   };
 
+  const handleAddOfficer = (newOfficer) => {
+    setAuthorizedOfficers((prev) => [newOfficer, ...prev]);
+  };
+
+  const handleRevokeOfficer = (officerId) => {
+    setAuthorizedOfficers((prev) =>
+      prev.map((off) => (off.id === officerId ? { ...off, status: 'Revoked' } : off))
+    );
+  };
+
   // Add or Deduplicate Report by Location
   const addReport = (newReport) => {
     setReports((prev) => {
@@ -104,7 +134,6 @@ export default function App() {
       );
 
       if (existingIndex !== -1) {
-        // Same Location: Keep SAME ID, increment Hit Count & update g-Force cleanly
         const updated = [...prev];
         const existing = updated[existingIndex];
         updated[existingIndex] = {
@@ -115,7 +144,6 @@ export default function App() {
         };
         return updated;
       } else {
-        // New Location: Add new ID
         return [{ ...newReport, hitCount: 1 }, ...prev];
       }
     });
@@ -176,10 +204,10 @@ export default function App() {
             📱 Citizen App
           </button>
           <button 
-            onClick={() => navigate('officer')}
-            style={{ background: currentView === 'officer' || currentView === 'reports_list' || currentView === 'pothole_detail' ? '#E8842C' : '#334155', color: '#FFF', border: 'none', padding: '4px 10px', borderRadius: 4, cursor: 'pointer' }}
+            onClick={() => navigate('officer_login')}
+            style={{ background: currentView === 'officer' || currentView === 'officer_login' || currentView === 'reports_list' || currentView === 'pothole_detail' ? '#E8842C' : '#334155', color: '#FFF', border: 'none', padding: '4px 10px', borderRadius: 4, cursor: 'pointer' }}
           >
-            📊 Field Officer
+            📊 Field Officer Access
           </button>
           <button 
             onClick={() => navigate('admin_login')}
@@ -201,6 +229,7 @@ export default function App() {
       {currentView === 'profile' && <CitizenProfile onNavigate={navigate} user={currentUser} />}
       {currentView === 'offline_queue' && <OfflineSyncQueue onNavigate={navigate} />}
       
+      {currentView === 'officer_login' && <OfficerLogin onNavigate={navigate} authorizedOfficers={authorizedOfficers} onLoginSuccess={handleLoginSuccess} />}
       {currentView === 'officer' && <OfficerDashboard onNavigate={navigate} reports={reports} notifications={notifications} />}
       {currentView === 'officer_reset' && <OfficerResetPassword onNavigate={navigate} />}
       {currentView === 'reports_list' && <ReportsList onNavigate={navigate} reports={reports} notifications={notifications} />}
@@ -221,7 +250,14 @@ export default function App() {
           onSubmitAdminReview={submitAdminReview} 
         />
       )}
-      {currentView === 'admin_officers' && <AdminOfficers onNavigate={navigate} />}
+      {currentView === 'admin_officers' && (
+        <AdminOfficers 
+          onNavigate={navigate} 
+          authorizedOfficers={authorizedOfficers} 
+          onAddOfficer={handleAddOfficer} 
+          onRevokeOfficer={handleRevokeOfficer} 
+        />
+      )}
       {currentView === 'admin_settings' && <AdminSettings onNavigate={navigate} />}
       {currentView === 'gis_map' && (
         <div style={{ fontFamily: 'Noto Sans, sans-serif', padding: 24, maxWidth: 1200, margin: '0 auto' }}>
