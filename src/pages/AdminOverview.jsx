@@ -54,7 +54,6 @@ export function AdminOverview({ onNavigate, reports = [], onSubmitAdminReview })
 
       {/* Sub Nav */}
       <nav style={{ background: '#152A47', padding: '8px 24px', display: 'flex', gap: 16 }}>
-        <button onClick={() => onNavigate('officer')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>📊 Officer View</button>
         <button onClick={() => onNavigate('admin_overview')} style={{ background: 'none', border: 'none', color: '#E8842C', fontWeight: 700, cursor: 'pointer' }}>🏛️ City Overview</button>
         <button onClick={() => onNavigate('admin_officers')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>👥 Officer Mgmt</button>
         <button onClick={() => onNavigate('admin_settings')} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>⚙️ System Settings</button>
