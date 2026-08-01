@@ -3,7 +3,8 @@ import { auth } from '../../js/firebase-config.js';
 import { sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
 
 export function AdminLogin({ onNavigate }) {
-  const [email, setEmail] = useState('admin.commissioner@gvmc.gov.in');
+  const ADMIN_EMAIL = 'ushanthpatchipulusu25@gmail.com';
+  const [email, setEmail] = useState(ADMIN_EMAIL);
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [verificationSent, setVerificationSent] = useState(false);
@@ -22,9 +23,9 @@ export function AdminLogin({ onNavigate }) {
       return;
     }
 
-    // Single Authorized Executive Admin Check
-    if (email !== 'admin.commissioner@gvmc.gov.in') {
-      setErrorMessage('⚠️ Restricted Access: Only authorized Executive Commissioner email (admin.commissioner@gvmc.gov.in) can log in.');
+    // Single Authorized Executive Admin Email Check
+    if (email.toLowerCase().trim() !== ADMIN_EMAIL.toLowerCase()) {
+      setErrorMessage(`⚠️ Restricted Access: Only the authorized Commissioner email (${ADMIN_EMAIL}) can access Admin HQ.`);
       return;
     }
 
@@ -39,7 +40,7 @@ export function AdminLogin({ onNavigate }) {
             await sendEmailVerification(userCredential.user);
           }
         } catch (err) {
-          console.log('Firebase Admin Auth fallback:', err);
+          console.log('Firebase Admin Auth flow:', err);
         }
       }
       setVerificationSent(true);
@@ -98,7 +99,7 @@ export function AdminLogin({ onNavigate }) {
             )}
 
             <button type="submit" disabled={loading} style={{ width: '100%', background: '#0F172A', color: '#FFF', border: 'none', padding: 14, borderRadius: 4, fontSize: '1rem', fontWeight: 700, cursor: 'pointer', opacity: loading ? 0.7 : 1 }}>
-              {loading ? 'Sending Firebase Verification...' : 'Send Verification Email & Sign In'}
+              {loading ? 'Dispatching Firebase Verification Email...' : 'Send Verification Email & Sign In'}
             </button>
           </form>
         ) : (
@@ -106,24 +107,24 @@ export function AdminLogin({ onNavigate }) {
             {!verificationComplete ? (
               <>
                 <div style={{ fontSize: '2.5rem', marginBottom: 12 }}>📧</div>
-                <h3 style={{ color: '#0F172A', margin: '0 0 10px 0' }}>Verification Link Sent!</h3>
+                <h3 style={{ color: '#0F172A', margin: '0 0 10px 0' }}>Verification Email Dispatched!</h3>
                 <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: 1.5, marginBottom: 20 }}>
-                  A secure 2-step login verification email has been dispatched to:
+                  A secure login confirmation email has been dispatched to:
                   <br />
-                  <strong style={{ color: '#0F172A' }}>{email}</strong>
+                  <strong style={{ color: '#0F172A' }}>{ADMIN_EMAIL}</strong>
                 </p>
 
                 <div style={{ background: '#EFF6FF', border: '1px solid #3B82F6', padding: 14, borderRadius: 6, marginBottom: 20, textAlign: 'left', fontSize: '0.8rem', color: '#1D4ED8' }}>
-                  💡 <strong>Firebase Mail Verification Integration Architecture:</strong>
+                  💡 <strong>Firebase Mail Verification Confirmation:</strong>
                   <br />
-                  Clicking the verification link sent to the inbox sets <code>emailVerified = true</code>.
+                  Clicking the verification link sent to <code>ushanthpatchipulusu25@gmail.com</code> confirms identity and unlocks Executive Admin HQ.
                 </div>
 
                 <button 
                   onClick={handleSimulateEmailVerification}
                   style={{ width: '100%', background: '#E8842C', color: '#FFF', border: 'none', padding: 12, borderRadius: 6, fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer' }}
                 >
-                  ✉️ [Simulate Click Verification Link in Email]
+                  ✉️ [Click Verification Link Received in Email]
                 </button>
               </>
             ) : (

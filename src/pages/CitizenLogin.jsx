@@ -28,19 +28,20 @@ export function CitizenLogin({ onNavigate, onLoginSuccess }) {
         if (onLoginSuccess) {
           onLoginSuccess({ email: userCredential.user.email, role: 'citizen', uid: userCredential.user.uid });
         }
+        onNavigate('home');
       } else {
-        if (onLoginSuccess) {
-          onLoginSuccess({ email, role: 'citizen' });
-        }
+        setErrorMessage('⚠️ Authentication service unavailable.');
       }
-      onNavigate('home');
     } catch (error) {
-      console.log('Firebase Auth error fallback:', error);
-      // Fallback for seamless demo experience if user hasn't created account in Firebase Console yet
-      if (onLoginSuccess) {
-        onLoginSuccess({ email, role: 'citizen' });
+      console.log('Firebase Citizen Login error:', error);
+      // Strictly enforce registration: if account not found or wrong password, block access
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        setErrorMessage('⚠️ Account not registered or invalid password. Please Register first to create an account.');
+      } else if (error.code === 'auth/wrong-password') {
+        setErrorMessage('⚠️ Incorrect password. Please try again or reset your password.');
+      } else {
+        setErrorMessage('⚠️ Account not registered. Please click "Register Here" below to create a new account first.');
       }
-      onNavigate('home');
     } finally {
       setLoading(false);
     }
@@ -76,7 +77,7 @@ export function CitizenLogin({ onNavigate, onLoginSuccess }) {
         </div>
 
         {errorMessage && (
-          <div style={{ color: '#DC2626', fontSize: '0.78rem', fontWeight: 700, marginTop: -4 }}>
+          <div style={{ color: '#DC2626', fontSize: '0.78rem', fontWeight: 700, marginTop: -4, lineHeight: 1.4 }}>
             {errorMessage}
           </div>
         )}

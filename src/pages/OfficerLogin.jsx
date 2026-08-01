@@ -26,13 +26,13 @@ export function OfficerLogin({ onNavigate, authorizedOfficers = [], onLoginSucce
       return;
     }
 
-    // Verify if access has been granted by Admin HQ
+    // Verify if access has been granted & registered by Admin HQ
     const isAuthorized = authorizedOfficers.some(
       (off) => off.email.toLowerCase() === email.toLowerCase() && off.status === 'Active'
     );
 
     if (!isAuthorized) {
-      setErrorMessage(`⚠️ Access Denied: "${email}" has not been granted access by Admin HQ. Please contact Admin Commissioner HQ for access provisioning.`);
+      setErrorMessage(`⚠️ Account Not Found / Access Denied: "${email}" is not registered or granted access by Admin HQ. Please contact Admin Commissioner HQ to register this account.`);
       return;
     }
 
@@ -48,11 +48,12 @@ export function OfficerLogin({ onNavigate, authorizedOfficers = [], onLoginSucce
       }
       onNavigate('officer');
     } catch (error) {
-      console.log('Firebase Officer Auth fallback:', error);
-      if (onLoginSuccess) {
-        onLoginSuccess({ email, role: 'officer' });
+      console.log('Firebase Officer Auth error:', error);
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        setErrorMessage(`⚠️ Account not registered in Firebase or invalid password. Please ensure Admin HQ has registered "${email}".`);
+      } else {
+        setErrorMessage('⚠️ Account verification failed. Please ensure your account is provisioned by Admin HQ.');
       }
-      onNavigate('officer');
     } finally {
       setLoading(false);
     }
@@ -69,9 +70,9 @@ export function OfficerLogin({ onNavigate, authorizedOfficers = [], onLoginSucce
 
         <form onSubmit={handleSubmit} style={{ padding: 24 }}>
           <div style={{ background: '#EFF6FF', border: '1px solid #93C5FD', color: '#1E40AF', padding: 10, borderRadius: 6, fontSize: '0.78rem', fontWeight: 700, marginBottom: 18 }}>
-            🔒 ADMIN HQ PROVISIONED ACCESS ONLY
+            🔒 ADMIN HQ REGISTERED ACCESS ONLY
             <br />
-            <span style={{ fontWeight: 400, fontSize: '0.74rem' }}>Access is granted directly by Admin HQ. Field Officers must log in with their assigned @gvmc.gov.in email.</span>
+            <span style={{ fontWeight: 400, fontSize: '0.74rem' }}>Access must be registered directly by Admin HQ. Field Officers log in with their assigned @gvmc.gov.in email.</span>
           </div>
 
           <div style={{ marginBottom: 16 }}>
@@ -103,7 +104,7 @@ export function OfficerLogin({ onNavigate, authorizedOfficers = [], onLoginSucce
           )}
 
           <button type="submit" disabled={loading} style={{ width: '100%', background: '#1F3A5F', color: '#FFF', border: 'none', padding: 13, borderRadius: 4, fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', opacity: loading ? 0.7 : 1 }}>
-            {loading ? 'Verifying Admin Provisioning...' : 'Sign In to Field Officer Dashboard'}
+            {loading ? 'Verifying Registration with Firebase...' : 'Sign In to Field Officer Dashboard'}
           </button>
         </form>
       </div>
