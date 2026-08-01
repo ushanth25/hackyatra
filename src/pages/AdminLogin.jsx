@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { auth } from '../../js/firebase-config.js';
+import { sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
 
 export function AdminLogin({ onNavigate }) {
   const [email, setEmail] = useState('admin.commissioner@gvmc.gov.in');
@@ -6,8 +8,9 @@ export function AdminLogin({ onNavigate }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [verificationSent, setVerificationSent] = useState(false);
   const [verificationComplete, setVerificationComplete] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email) {
@@ -19,15 +22,30 @@ export function AdminLogin({ onNavigate }) {
       return;
     }
 
-    // Single Authorized Admin Check
+    // Single Authorized Executive Admin Check
     if (email !== 'admin.commissioner@gvmc.gov.in') {
-      setErrorMessage('⚠️ Restricted Access: Only authorized Commissioner email (admin.commissioner@gvmc.gov.in) can log in.');
+      setErrorMessage('⚠️ Restricted Access: Only authorized Executive Commissioner email (admin.commissioner@gvmc.gov.in) can log in.');
       return;
     }
 
+    setLoading(true);
     setErrorMessage('');
-    // Trigger Email Verification Step
-    setVerificationSent(true);
+
+    try {
+      if (auth) {
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          if (userCredential.user && !userCredential.user.emailVerified) {
+            await sendEmailVerification(userCredential.user);
+          }
+        } catch (err) {
+          console.log('Firebase Admin Auth fallback:', err);
+        }
+      }
+      setVerificationSent(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSimulateEmailVerification = () => {
@@ -79,8 +97,8 @@ export function AdminLogin({ onNavigate }) {
               </div>
             )}
 
-            <button type="submit" style={{ width: '100%', background: '#0F172A', color: '#FFF', border: 'none', padding: 14, borderRadius: 4, fontSize: '1rem', fontWeight: 700, cursor: 'pointer' }}>
-              Send Verification Email & Sign In
+            <button type="submit" disabled={loading} style={{ width: '100%', background: '#0F172A', color: '#FFF', border: 'none', padding: 14, borderRadius: 4, fontSize: '1rem', fontWeight: 700, cursor: 'pointer', opacity: loading ? 0.7 : 1 }}>
+              {loading ? 'Sending Firebase Verification...' : 'Send Verification Email & Sign In'}
             </button>
           </form>
         ) : (

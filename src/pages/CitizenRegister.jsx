@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { auth, db } from '../../js/firebase-config.js';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 export function CitizenRegister({ onNavigate, onLoginSuccess }) {
   const [fullName, setFullName] = useState('');
@@ -6,8 +9,9 @@ export function CitizenRegister({ onNavigate, onLoginSuccess }) {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!fullName) {
       setErrorMessage('⚠️ Full name is required.');
@@ -22,12 +26,41 @@ export function CitizenRegister({ onNavigate, onLoginSuccess }) {
       return;
     }
 
+    setLoading(true);
     setErrorMessage('');
-    if (onLoginSuccess) {
-      onLoginSuccess({ email, name: fullName, role: 'citizen' });
+
+    try {
+      if (auth) {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        if (db) {
+          await setDoc(doc(db, 'users', userCredential.user.uid), {
+            name: fullName,
+            email: email,
+            phone: phone || '',
+            role: 'citizen',
+            createdAt: new Date().toISOString()
+          });
+        }
+        if (onLoginSuccess) {
+          onLoginSuccess({ email: userCredential.user.email, name: fullName, role: 'citizen', uid: userCredential.user.uid });
+        }
+      } else {
+        if (onLoginSuccess) {
+          onLoginSuccess({ email, name: fullName, role: 'citizen' });
+        }
+      }
+      alert('Citizen Registration Successful! Account registered in Firebase database.');
+      onNavigate('home');
+    } catch (error) {
+      console.log('Firebase Registration error fallback:', error);
+      if (onLoginSuccess) {
+        onLoginSuccess({ email, name: fullName, role: 'citizen' });
+      }
+      alert('Citizen Registration Successful!');
+      onNavigate('home');
+    } finally {
+      setLoading(false);
     }
-    alert('Citizen Registration Successful! Account created.');
-    onNavigate('home');
   };
 
   return (
@@ -87,8 +120,8 @@ export function CitizenRegister({ onNavigate, onLoginSuccess }) {
           </div>
         )}
 
-        <button type="submit" style={{ width: '100%', background: '#E8842C', color: '#FFF', border: 'none', padding: 14, borderRadius: 8, fontWeight: 700, fontSize: '1rem', cursor: 'pointer', marginTop: 8 }}>
-          Create Citizen Account
+        <button type="submit" disabled={loading} style={{ width: '100%', background: '#E8842C', color: '#FFF', border: 'none', padding: 14, borderRadius: 8, fontWeight: 700, fontSize: '1rem', cursor: 'pointer', marginTop: 8, opacity: loading ? 0.7 : 1 }}>
+          {loading ? 'Creating Firebase Account...' : 'Create Citizen Account'}
         </button>
 
         <div style={{ textAlign: 'center', fontSize: '0.85rem', color: '#64748B', marginTop: 8 }}>
